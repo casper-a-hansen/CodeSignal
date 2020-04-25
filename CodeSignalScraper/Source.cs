@@ -2,6 +2,7 @@
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -17,6 +18,7 @@ namespace CodeSignalScraper
     Imported: <date>
     By:       <username>
     Url:      <taskUrl>
+
     Description:
         <description>
 */
@@ -58,7 +60,9 @@ namespace <area>
     [Test]
     public void <task>()
     {
-        Test.Execute(typeof(<task>Class)<tests>);
+        Test.Execute(typeof(<task>Class),
+            <tests>
+        );
     }
 ";
 
@@ -89,18 +93,30 @@ namespace <area>
                 "date" => DateTime.Now.ToString("yyyy-MM-dd HH:mm"),
                 "username" => Environment.UserName,
                 "taskurl" => task.TaskUrl,
-                "task" => task.Task,
-                "area" => task.Area.Replace(" ", ""),
+                "task" => Fix(task.Task, true),
+                "area" => Fix(task.Area),
                 "areaurl" => task.AreaUrl,
-                "topic" => task.Topic.Replace(" ", ""),
+                "topic" => Fix(task.Topic),
                 "solved" => task.Solved ? "Solved" : "Unsolved",
-                "description" => Indent(GetIndent(source, match.Index), task.Description),
-                "source" => Indent(GetIndent(source, match.Index), task.Source),
+                "description" => Indent(GetIndent(source, match.Index), task.Description.Trim()),
+                "source" => Indent(GetIndent(source, match.Index), task.Source.Trim()),
                 "tests" => Tests(GetIndent(source, match.Index), task.Tests),
                 _ => $"{match.Groups[1].Value} was not found",
             } );
         }
 
+        private static Regex regexCase = new Regex("\b[a-z]", RegexOptions.Compiled);
+        private static Regex regexCamel = new Regex("^[A-Z]", RegexOptions.Compiled);
+        private static Regex regexFix = new Regex("[^a-z0-9]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static string Fix(string name, bool camelCase = false)
+        {
+            name = regexCase.Replace(name, match => match.Value.ToUpper());
+            if (camelCase)
+            {
+                name = regexCase.Replace(name, match => match.Value.ToLower());
+            }
+            return regexFix.Replace(name, match => "");
+        }
         public static int GetIndent(string source, int index)
         {
             for(var i = index - 1; i >= 0; i--)
@@ -109,12 +125,12 @@ namespace <area>
             }
             return index;
         }
-        public static string Indent(int indent, string text)
+        public static string Indent(int indent, string text, bool firstLine = false)
         {
             if (!text.Contains("\r\n")) text = text.Replace("\n", "\r\n");
 
             StringBuilder result = new StringBuilder();
-            var indentStr = "";
+            var indentStr = firstLine ? new string(' ', indent) : "";
             int start = 0;
             while(start < text.Length)
             {
@@ -130,12 +146,18 @@ namespace <area>
         public static string Tests(int indent, List<string> tests)
         {
             if (tests == null || tests.Count == 0) return "";
+            bool comma = false;
             StringBuilder result = new StringBuilder();
             foreach (var test in tests)
             {
-                result.Append(", @\"");
-                result.Append(Indent(indent, test));
+                if (comma)
+                {
+                    result.AppendLine(",");
+                }
+                result.Append(Indent(indent, "@\"", comma));
+                result.Append(Indent(indent, test.Replace("\"", "\"\"").Trim(), true));
                 result.Append("\"");
+                comma = true;
             }
             result.AppendLine();
             return result.ToString();

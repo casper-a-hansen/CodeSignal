@@ -36,7 +36,7 @@ namespace CodeSignalScraper
             tasks = Source.FilterTasks(tasks).ToList();
             Console.WriteLine($"Retrieving {tasks.Count} task to update source and tests.");
 
-            foreach(var task in tasks)
+            foreach(var task in tasks.Take(10))
             {
                 await Scraping.RetrieveTask(page, task);
                 Source.WriteTask(task);
