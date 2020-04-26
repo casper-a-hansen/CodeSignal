@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NUnit.Framework;
+using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
@@ -53,38 +54,43 @@ namespace <area>
     }
 }
 ";
-        public static readonly string TestFunction = @"    /*
-        Imported: <date>
-        By:       <username>
-        Url:      <taskUrl>
-    */
-    [Test]
-    public void <task>()
-    {
-        Test.Execute(typeof(<task>Class),
-            <tests>
-        );
-    }
+        public static readonly string TestFunction = @"        /*
+            Imported: <date>
+            By:       <username>
+            Url:      <taskUrl>
+        */
+        [Test]
+        public void <task>()
+        {
+            Test.Execute(typeof(<task>Class),
+                <tests>
+            );
+        }
 ";
 
-        private static Regex regexStatus = new Regex(@"^\s*Status\s*:\s*((?:Uns|S)olved)\s*$", RegexOptions.Compiled | RegexOptions.Multiline);
         public static IEnumerable<TaskInfo> FilterTasks(IEnumerable<TaskInfo> tasks)
         {
             foreach(var task in tasks)
             {
-                var sourcePath = Path.Combine(SourcePath, ReplaceText(ClassFileName, task));
-                if (File.Exists(sourcePath))
-                {
-                    // The task is not solved yet so no need to update source file.
-                    if (!task.Solved) continue;
-
-                    // Check if source contains the Solved source.
-                    var source = File.ReadAllText(sourcePath);
-                    var match = regexStatus.Match(source);
-                    if (match.Success && match.Groups[1].Value == "Solved") continue;
-                }
-                yield return task;
+                if (!IsSourceFinal(task)) yield return task;
             }
+        }
+
+        private static Regex regexStatus = new Regex(@"^\s*Status\s*:\s*((?:Uns|S)olved)\s*$", RegexOptions.Compiled | RegexOptions.Multiline);
+        private static bool IsSourceFinal(TaskInfo task)
+        {
+            var sourcePath = Path.Combine(SourcePath, ReplaceText(ClassFileName, task));
+            if (File.Exists(sourcePath))
+            {
+                // The task is not solved yet so no need to update source file.
+                if (!task.Solved) return false;
+
+                // Check if source contains the Solved source.
+                var source = File.ReadAllText(sourcePath);
+                var match = regexStatus.Match(source);
+                return match.Success && match.Groups[1].Value == "Solved";
+            }
+            return false;
         }
 
         private static Regex regexParameter = new Regex(@"<(\w+)>", RegexOptions.Compiled);
@@ -120,45 +126,48 @@ namespace <area>
         }
         public static string WordWrap(string text, int maxLength)
         {
-            int First(int pos)
+            int First(string line, int pos)
             {
-                while (pos < text.Length && char.IsWhiteSpace(text[pos]))
+                while (pos < line.Length && char.IsWhiteSpace(line[pos]))
                     pos++;
                 return pos;
             }
-            int Last(int pos)
+            int Last(string line, int pos)
             {
-                while (pos >= 0 && char.IsWhiteSpace(text[pos]))
+                while (pos >= 0 && char.IsWhiteSpace(line[pos]))
                     pos--;
                 return pos;
             }
-            int LastSpace(int start, int length)
+            int LastSpace(string line, int start, int length)
             {
                 var pos = start + length;
                 while (pos >= start)
                 {
-                    if (char.IsWhiteSpace(text[pos])) return Last(pos);
+                    if (char.IsWhiteSpace(line[pos])) return Last(line, pos);
                     pos--;
                 }
                 return start + length - 1;
             }
 
             StringBuilder result = new StringBuilder(text.Length + 2 * (text.Length / maxLength));
-            var start = First(0);
-            var textEnd = Last(text.Length-1);
-            while (start + maxLength - 1 < textEnd)
+            foreach (var line in text.Split('\n'))
             {
-                var end = LastSpace(start, maxLength);
-                if (end > start)
+                var start = First(line, 0);
+                var textEnd = Last(line, line.Length - 1);
+                while (start + maxLength - 1 < textEnd)
                 {
-                    result.Append(text, start, end - start + 1);
-                    result.AppendLine();
+                    var end = LastSpace(line, start, maxLength);
+                    if (end > start)
+                    {
+                        result.Append(line, start, end - start + 1);
+                        result.AppendLine();
+                    }
+                    start = First(line, end + 1);
                 }
-                start = First(end + 1);
-            }
 
-            result.Append(text, start, textEnd - start + 1);
-            result.AppendLine();
+                result.Append(line, start, textEnd - start + 1);
+                result.AppendLine();
+            }
             return result.ToString();
         }
         public static int GetIndent(string source, int index)
@@ -209,6 +218,24 @@ namespace <area>
         public static void WriteTask(TaskInfo task)
         {
             Console.WriteLine($"Writing {task.Task} of {task.Topic}.");
+            {
+                // Check that we get the Task Name right.
+                var name = Fix(task.Task, true);
+                var pattern = name.Replace("to", "(?:to|2)", StringComparison.OrdinalIgnoreCase);
+                Regex regex = new Regex(pattern, RegexOptions.IgnoreCase);
+                var match = regex.Match(task.Source);
+                if (match.Success && !name.Equals(match.Value))
+                {
+                    Console.WriteLine($"Changed task name from {task.Task}to {match.Value}");
+                    task.UpdateTaskName(match.Value);
+                    if (IsSourceFinal(task))
+                    {
+                        Console.WriteLine($"Skipped the task since it is named {task.Task}");
+                        return;
+                    }
+                }
+            }
+
             // Writing source file
             var sourcePath = Path.Combine(SourcePath, ReplaceText(ClassFileName, task));
             Directory.CreateDirectory(Path.GetDirectoryName(sourcePath));

@@ -34,7 +34,7 @@ namespace CodeSignalScraper
             var result = new List<TaskInfo>();
             foreach (var area in areas)
             {
-                if (area.title == "Databases") continue;  // Does not support database queries.
+                if (area.title == "Databases") continue;  // Does not support SQL queries.
                 if (area.title == "Python") continue;  // Does not support multiple choice.
                 Console.WriteLine($"Opening area {area.title}");
                 var response = await page.GoToAsync(area.url);
@@ -50,7 +50,8 @@ namespace CodeSignalScraper
                     foreach (var task in taskList)
                     {
                         var taskUrl = await (await task.GetPropertyAsync("href")).JsonValueAsync<string>();
-                        var solved = !(await (await task.GetPropertyAsync("className")).JsonValueAsync<string>()).Contains("-not-solved");
+                        var solvedText = await (await task.GetPropertyAsync("className")).JsonValueAsync<string>();
+                        var solved = !solvedText.Contains("-current") && !solvedText.Contains("-not-solved");
                         var taskTitle = await (await (await task.QuerySelectorAsync("h3")).GetPropertyAsync("innerText")).JsonValueAsync<string>();
 
                         result.Add(new TaskInfo(area.url, area.title, topicTitle, taskUrl, taskTitle, solved));
@@ -65,7 +66,7 @@ namespace CodeSignalScraper
             Console.WriteLine($"Reading {task.Task} of {task.Topic}.");
 
             await page.GoToAsync(task.TaskUrl);
-            await page.SetViewportAsync(new ViewPortOptions() { Height = 100000, Width = 1600, HasTouch = false, IsMobile = false });
+            await page.SetViewportAsync(new ViewPortOptions() { Height = 100000, Width = 8000, HasTouch = false, IsMobile = false });
             var source = await page.WaitForSelectorAsync("div.view-lines");
             task.Source = await (await source.GetPropertyAsync("innerText")).JsonValueAsync<string>();
             await page.SetViewportAsync(new ViewPortOptions() { Height = 800, Width = 1600, HasTouch = false, IsMobile = false });

@@ -15,6 +15,11 @@ namespace CodeSignalScraper
             Task = task;
             Solved = solved;
         }
+
+        public void UpdateTaskName(string name)
+        {
+            Task = name;
+        }
         public string AreaUrl { get; private set; }
         public string Area { get; private set; }
         public string Topic { get; private set; }

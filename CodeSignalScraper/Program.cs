@@ -1,11 +1,11 @@
 ﻿// Known issues:
-// Names with many capital letters like HTML End Tag By Start Tag is convert to hTMLEndTagByStartTag and not to htmlEndTagByStartTag
-// Names with - is converted wrong e.g. Kill K-th bit -> killKThBit should be killKthBit
-// Lines in source are shown wrapped and therefor they appear wrapped, it is a problem when comments seems to be code.
-// Mixing LF and CR/LF
-// Cannot read results that are too long
+// fixed Names with many capital letters like HTML End Tag By Start Tag is convert to hTMLEndTagByStartTag and not to htmlEndTagByStartTag
+// fixed Names with - is converted wrong e.g. Kill K-th bit -> killKThBit should be killKthBit
+// fixed Lines in source are shown wrapped and therefor they appear wrapped, it is a problem when comments seems to be code.
+// fixed Mixing LF and CR/LF, seems to be in description
+// Mixing LF and CR/LF, when writing tests for the test method (when Test case is too long)
+// Cannot read test that are too long
 // Does not support changes of parameter names.
-// Cannot read tests correctly when they are too long
 // Fixed - Spaces in the source are 160 and not 32, its a problem in constants.
 using System;
 using System.IO;
