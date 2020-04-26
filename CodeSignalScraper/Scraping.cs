@@ -35,6 +35,7 @@ namespace CodeSignalScraper
             foreach (var area in areas)
             {
                 if (area.title == "Databases") continue;  // Does not support database queries.
+                if (area.title == "Python") continue;  // Does not support multiple choice.
                 Console.WriteLine($"Opening area {area.title}");
                 var response = await page.GoToAsync(area.url);
                 var dummy = await page.WaitForSelectorAsync("div.arcade-map--topic");
@@ -86,13 +87,18 @@ namespace CodeSignalScraper
                     body = await item.QuerySelectorAsync("div.accordion--body");
                     if (body == null) await Task.Delay(100);
                 } while (body == null);
-
                 var input = await body.QuerySelectorAsync("pre.task-tests--value");
                 if (input == null) break;
                 var test = await (await input.GetPropertyAsync("innerText")).JsonValueAsync<string>();
 
                 input = await body.QuerySelectorAsync("pre.-answer");
                 test += "\nExpected Output: " + await (await input.GetPropertyAsync("innerText")).JsonValueAsync<string>();
+
+                var warning = await body.QuerySelectorAsync("div.task-tests--warning");
+                if (warning != null)
+                {
+                    test = await (await warning.GetPropertyAsync("innerText")).JsonValueAsync<string>() + Environment.NewLine + test; ;
+                }
                 task.Tests.Add(test);
             }
         }

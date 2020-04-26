@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Collections;
 using NUnit.Framework;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace CodeSignalSolutions
 {
@@ -75,7 +76,7 @@ namespace CodeSignalSolutions
             }
             return success;
         }
-        static Regex regexParameters = new Regex(@"^\s*([a-z ]+)\s*:", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Multiline);
+        static Regex regexParameters = new Regex(@"^\s*([_a-z0-9 ]+)\s*:", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Multiline);
         static object[] ParseParameters(ParameterInfo[] parameters, string test) =>
             parameters.Select(p => ParseValue(p.Name, p.ParameterType, test)).ToArray();
         public static object ParseExpectedOutput(Type returnType, string test) => ParseValue("Expected Output", returnType, test);
@@ -115,7 +116,7 @@ namespace CodeSignalSolutions
             {
                 var e = JsonConvert.SerializeObject(expected, Formatting.Indented).Split("\r\n");
                 var r = JsonConvert.SerializeObject(result, Formatting.Indented).Split("\r\n");
-                int maxWidth = Math.Min(12, e.Max(s => s.Length));
+                int maxWidth = Math.Max(12, e.Max(s => s.Length));
                 var spacer = new string(' ', maxWidth);
 
                 for (int i = 0; i < Math.Max(e.Length, r.Length); i++)

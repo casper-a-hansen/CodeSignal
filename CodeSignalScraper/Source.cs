@@ -25,6 +25,7 @@ namespace CodeSignalScraper
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace CodeSignalSolutions.<area>.<topic>
@@ -98,24 +99,67 @@ namespace <area>
                 "areaurl" => task.AreaUrl,
                 "topic" => Fix(task.Topic),
                 "solved" => task.Solved ? "Solved" : "Unsolved",
-                "description" => Indent(GetIndent(source, match.Index), task.Description.Trim()),
-                "source" => Indent(GetIndent(source, match.Index), task.Source.Trim()),
+                "description" => Indent(GetIndent(source, match.Index), WordWrap(task.Description.Trim(), 80)),
+                "source" => Indent(GetIndent(source, match.Index), task.Source.Replace((char)160, ' ').Trim()),
                 "tests" => Tests(GetIndent(source, match.Index), task.Tests),
                 _ => $"{match.Groups[1].Value} was not found",
             } );
         }
 
-        private static Regex regexCase = new Regex("\b[a-z]", RegexOptions.Compiled);
-        private static Regex regexCamel = new Regex("^[A-Z]", RegexOptions.Compiled);
-        private static Regex regexFix = new Regex("[^a-z0-9]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-        private static string Fix(string name, bool camelCase = false)
+        private static Regex regexCase = new Regex(@"\b[a-z]", RegexOptions.Compiled);
+        private static Regex regexCamel = new Regex(@"^[A-Z]", RegexOptions.Compiled);
+        private static Regex regexFix = new Regex(@"[^a-z0-9]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        public static string Fix(string name, bool camelCase = false)
         {
             name = regexCase.Replace(name, match => match.Value.ToUpper());
             if (camelCase)
             {
-                name = regexCase.Replace(name, match => match.Value.ToLower());
+                name = regexCamel.Replace(name, match => match.Value.ToLower());
             }
             return regexFix.Replace(name, match => "");
+        }
+        public static string WordWrap(string text, int maxLength)
+        {
+            int First(int pos)
+            {
+                while (pos < text.Length && char.IsWhiteSpace(text[pos]))
+                    pos++;
+                return pos;
+            }
+            int Last(int pos)
+            {
+                while (pos >= 0 && char.IsWhiteSpace(text[pos]))
+                    pos--;
+                return pos;
+            }
+            int LastSpace(int start, int length)
+            {
+                var pos = start + length;
+                while (pos >= start)
+                {
+                    if (char.IsWhiteSpace(text[pos])) return Last(pos);
+                    pos--;
+                }
+                return start + length - 1;
+            }
+
+            StringBuilder result = new StringBuilder(text.Length + 2 * (text.Length / maxLength));
+            var start = First(0);
+            var textEnd = Last(text.Length-1);
+            while (start + maxLength - 1 < textEnd)
+            {
+                var end = LastSpace(start, maxLength);
+                if (end > start)
+                {
+                    result.Append(text, start, end - start + 1);
+                    result.AppendLine();
+                }
+                start = First(end + 1);
+            }
+
+            result.Append(text, start, textEnd - start + 1);
+            result.AppendLine();
+            return result.ToString();
         }
         public static int GetIndent(string source, int index)
         {
@@ -155,11 +199,10 @@ namespace <area>
                     result.AppendLine(",");
                 }
                 result.Append(Indent(indent, "@\"", comma));
-                result.Append(Indent(indent, test.Replace("\"", "\"\"").Trim(), true));
+                result.Append(Indent(indent, test.Replace("\"", "\"\"").Trim()));
                 result.Append("\"");
                 comma = true;
             }
-            result.AppendLine();
             return result.ToString();
         }
 

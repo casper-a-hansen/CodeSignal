@@ -50,5 +50,42 @@ Expected Output: [[6, 4],
 );";
             Assert.AreEqual(expected, result);
         }
+
+        [Test]
+        public void TestWordWrap()
+        {
+            var text = "The quick brown fox jumps over the lazy dog.\r";
+            var result = Source.WordWrap(text, 15);
+            Assert.AreEqual(@"The quick brown
+fox jumps over
+the lazy dog.
+", result);
+
+            result = Source.WordWrap(text, 12);
+            Assert.AreEqual(@"The quick
+brown fox
+jumps over
+the lazy
+dog.
+", result);
+            result = Source.WordWrap("12345678901234567890", 7);
+            Assert.AreEqual(@"1234567
+8901234
+567890
+", result);
+            result = Source.WordWrap("The         quick      brown        fox.", 10);
+            Assert.AreEqual(@"The
+quick
+brown
+fox.
+", result);
+        }
+
+        [Test]
+        public void TestFix()
+        {
+            Assert.AreEqual("TheBrownFox", Source.Fix("The brown fox"));
+            Assert.AreEqual("theBrownFox", Source.Fix("The brown fox", true));
+        }
     }
 }

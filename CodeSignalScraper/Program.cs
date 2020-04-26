@@ -1,4 +1,13 @@
-﻿using System;
+﻿// Known issues:
+// Names with many capital letters like HTML End Tag By Start Tag is convert to hTMLEndTagByStartTag and not to htmlEndTagByStartTag
+// Names with - is converted wrong e.g. Kill K-th bit -> killKThBit should be killKthBit
+// Lines in source are shown wrapped and therefor they appear wrapped, it is a problem when comments seems to be code.
+// Mixing LF and CR/LF
+// Cannot read results that are too long
+// Does not support changes of parameter names.
+// Cannot read tests correctly when they are too long
+// Fixed - Spaces in the source are 160 and not 32, its a problem in constants.
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,7 +45,7 @@ namespace CodeSignalScraper
             tasks = Source.FilterTasks(tasks).ToList();
             Console.WriteLine($"Retrieving {tasks.Count} task to update source and tests.");
 
-            foreach(var task in tasks.Take(10))
+            foreach(var task in tasks)
             {
                 await Scraping.RetrieveTask(page, task);
                 Source.WriteTask(task);
@@ -45,7 +54,7 @@ namespace CodeSignalScraper
                 task.Tests = null;
             }
 
-
+            Console.WriteLine("Finished, press space to end the program.");
             Console.ReadKey();
             await page.CloseAsync();
             await browser.CloseAsync();
