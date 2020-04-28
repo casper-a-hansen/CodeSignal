@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Graphs\KingdomRoads\" />
+    <Folder Include="Graphs\" />
   </ItemGroup>
 
 </Project>

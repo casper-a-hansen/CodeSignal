@@ -180,18 +180,24 @@ namespace <area>
         }
         public static string Indent(int indent, string text, bool firstLine = false)
         {
-            if (!text.Contains("\r\n")) text = text.Replace("\n", "\r\n");
-
             StringBuilder result = new StringBuilder();
             var indentStr = firstLine ? new string(' ', indent) : "";
             int start = 0;
+            bool newLine = false;
             while(start < text.Length)
             {
                 var end = text.IndexOf('\n', start);
                 if (end == -1) end = text.Length - 1;
-                result.Append(indentStr);
-                if (indentStr.Length == 0) indentStr = new string(' ', indent);
-                result.Append(text, start, end - start + 1);
+                var lineEnd = end;
+                while (lineEnd > start && char.IsWhiteSpace(text[lineEnd])) lineEnd--;
+                if (lineEnd > start || !char.IsWhiteSpace(text[lineEnd]))
+                {
+                    if (newLine) result.AppendLine();
+                    newLine = true;
+                    result.Append(indentStr);
+                    if (indentStr.Length == 0) indentStr = new string(' ', indent);
+                    result.Append(text, start, lineEnd - start + 1);
+                }
                 start = end + 1;
             }
             return result.ToString();

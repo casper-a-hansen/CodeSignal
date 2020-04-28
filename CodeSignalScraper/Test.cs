@@ -14,16 +14,16 @@ namespace CodeSignalScraper
             var content = @"{
     <source>
 }";
-            var source = @"var a = 1;
-var b = 2;
-var c = 3;";
+            var source = "{\n    var a = 1;\n    var b = 2;\n    var c = 3;\n}\n";
             var regex = new Regex("<source>");
             var result = regex.Replace(content, match => Source.Indent(Source.GetIndent(content, match.Index), source));
 
             var expected = @"{
-    var a = 1;
-    var b = 2;
-    var c = 3;
+    {
+        var a = 1;
+        var b = 2;
+        var c = 3;
+    }
 }";
             Assert.AreEqual(expected, result);
         }

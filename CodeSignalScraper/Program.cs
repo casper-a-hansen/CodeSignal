@@ -3,7 +3,7 @@
 // fixed Names with - is converted wrong e.g. Kill K-th bit -> killKThBit should be killKthBit
 // fixed Lines in source are shown wrapped and therefor they appear wrapped, it is a problem when comments seems to be code.
 // fixed Mixing LF and CR/LF, seems to be in description
-// Mixing LF and CR/LF, when writing tests for the test method (when Test case is too long)
+// fixed Mixing LF and CR/LF, when writing tests for the test method (when Test case is too long)
 // Cannot read test that are too long
 // Does not support changes of parameter names.
 // Fixed - Spaces in the source are 160 and not 32, its a problem in constants.
@@ -11,6 +11,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using NUnit.Framework;
 using PuppeteerSharp;
 
 namespace CodeSignalScraper
@@ -20,6 +21,7 @@ namespace CodeSignalScraper
         public static readonly string BaseUrl = "https://app.codesignal.com";
         static void Main(string[] args)
         {
+            //new Test().SourceIndent(); return;
             Browser().Wait();
         }
 
@@ -37,14 +39,15 @@ namespace CodeSignalScraper
             Console.WriteLine("Loading codesignal.com");
             var pages = await browser.PagesAsync();
             var page = pages.Length > 0 ? pages[0] : await browser.NewPageAsync();
-            var areas = (await Scraping.ScanAreas(page));
-            var tasks = (await Scraping.ScanTasks(page, areas));
-            Console.WriteLine($"Located {tasks.Count} tasks where {tasks.Count(t => t.Solved)} is solved");
-            Console.WriteLine("Please note that only solved tasks and first new task and unlocked tasks are found!");
+            /*            var areas = (await Scraping.ScanAreas(page));
+                        var tasks = (await Scraping.ScanTasks(page, areas));
+                        Console.WriteLine($"Located {tasks.Count} tasks where {tasks.Count(t => t.Solved)} is solved");
+                        Console.WriteLine("Please note that only solved tasks and first new task and unlocked tasks are found!");
 
-            tasks = Source.FilterTasks(tasks).ToList();
-            Console.WriteLine($"Retrieving {tasks.Count} task to update source and tests.");
+                        tasks = Source.FilterTasks(tasks).ToList();
+                        Console.WriteLine($"Retrieving {tasks.Count} task to update source and tests.");*/
 
+            var tasks = new TaskInfo[] { new TaskInfo("https://app.codesignal.com/arcade/code-arcade", "The Core", "Cliffs Of Pain", "https://app.codesignal.com/arcade/code-arcade/cliffs-of-pain/iGBDQE3KjqbYyF8DH", "timeASCIIRepresentation", false) };
             foreach(var task in tasks)
             {
                 await Scraping.RetrieveTask(page, task);
