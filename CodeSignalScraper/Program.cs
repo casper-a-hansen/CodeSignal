@@ -4,7 +4,7 @@
 // fixed Lines in source are shown wrapped and therefor they appear wrapped, it is a problem when comments seems to be code.
 // fixed Mixing LF and CR/LF, seems to be in description
 // fixed Mixing LF and CR/LF, when writing tests for the test method (when Test case is too long)
-// Cannot read test that are too long
+// fixed Cannot read test that are too long
 // Does not support changes of parameter names.
 // Fixed - Spaces in the source are 160 and not 32, its a problem in constants.
 using System;
@@ -23,6 +23,11 @@ namespace CodeSignalScraper
         {
             //new Test().SourceIndent(); return;
             Browser().Wait();
+            /* If you get an exception like this you need to close Chromium before running
+             * System.AggregateException: 'One or more errors occurred. (Failed to launch 
+             * Chromium! [3436:8788:0429/225643.770:ERROR:cache_util_win.cc(21)] Unable to 
+             * move the cache: Access is denied. (0x5)
+             */
         }
 
         static async Task Browser()
@@ -39,16 +44,16 @@ namespace CodeSignalScraper
             Console.WriteLine("Loading codesignal.com");
             var pages = await browser.PagesAsync();
             var page = pages.Length > 0 ? pages[0] : await browser.NewPageAsync();
-            /*            var areas = (await Scraping.ScanAreas(page));
-                        var tasks = (await Scraping.ScanTasks(page, areas));
-                        Console.WriteLine($"Located {tasks.Count} tasks where {tasks.Count(t => t.Solved)} is solved");
-                        Console.WriteLine("Please note that only solved tasks and first new task and unlocked tasks are found!");
+            var areas = (await Scraping.ScanAreas(page));
+            var tasks = (await Scraping.ScanTasks(page, areas));
+            Console.WriteLine($"Located {tasks.Count} tasks where {tasks.Count(t => t.Solved)} is solved");
+            Console.WriteLine("Please note that only solved tasks and first new task and unlocked tasks are found!");
 
-                        tasks = Source.FilterTasks(tasks).ToList();
-                        Console.WriteLine($"Retrieving {tasks.Count} task to update source and tests.");*/
+            tasks = Source.FilterTasks(tasks).ToList();
+            Console.WriteLine($"Retrieving {tasks.Count} task to update source and tests.");
 
-            var tasks = new TaskInfo[] { new TaskInfo("https://app.codesignal.com/arcade/code-arcade", "The Core", "Cliffs Of Pain", "https://app.codesignal.com/arcade/code-arcade/cliffs-of-pain/iGBDQE3KjqbYyF8DH", "timeASCIIRepresentation", false) };
-            foreach(var task in tasks)
+            //            var tasks = new TaskInfo[] { new TaskInfo("https://app.codesignal.com/arcade/code-arcade", "The Core", "Cliffs Of Pain", "https://app.codesignal.com/arcade/code-arcade/cliffs-of-pain/iGBDQE3KjqbYyF8DH", "timeASCIIRepresentation", false) };
+            foreach (var task in tasks)
             {
                 await Scraping.RetrieveTask(page, task);
                 Source.WriteTask(task);

@@ -8,6 +8,11 @@ using System.Runtime.InteropServices;
 using PuppeteerSharp.Input;
 using System.Runtime.CompilerServices;
 using System.Reflection.Metadata;
+using System.IO;
+using Json=System.Text.Json;
+using Newtonsoft.Json;
+
+using System.Text.RegularExpressions;
 
 namespace CodeSignalScraper
 {
@@ -88,20 +93,74 @@ namespace CodeSignalScraper
                     body = await item.QuerySelectorAsync("div.accordion--body");
                     if (body == null) await Task.Delay(100);
                 } while (body == null);
-                var input = await body.QuerySelectorAsync("pre.task-tests--value");
-                if (input == null) break;
-                var test = await (await input.GetPropertyAsync("innerText")).JsonValueAsync<string>();
-
-                input = await body.QuerySelectorAsync("pre.-answer");
-                test += "\nExpected Output: " + await (await input.GetPropertyAsync("innerText")).JsonValueAsync<string>();
-
+                string test;
                 var warning = await body.QuerySelectorAsync("div.task-tests--warning");
                 if (warning != null)
                 {
-                    test = await (await warning.GetPropertyAsync("innerText")).JsonValueAsync<string>() + Environment.NewLine + test; ;
+                    // The test example is too big, download it.
+                    var name = await (await btn.GetPropertyAsync("innerText")).JsonValueAsync<string>();
+                    name = name.Replace(' ', '-') + ".json";
+                    name = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads", name);
+                    if (File.Exists(name)) File.Delete(name);
+                    var download = await warning.QuerySelectorAsync("div.button");
+                    await download.ClickAsync();
+                    int limit = 40;
+                    while (limit-- > 0 && !File.Exists(name))
+                    {
+                        await Task.Delay(250);
+
+                    }
+                    if (File.Exists(name))
+                    {
+                        test = ReadJsonTest(name);
+                    }
+                    else
+                    {
+                        test = "Failed to download test " + name;
+                    }
+                }
+                else
+                {
+                    var input = await body.QuerySelectorAsync("pre.task-tests--value");
+                    if (input == null) break;
+                    test = await (await input.GetPropertyAsync("innerText")).JsonValueAsync<string>();
+
+                    input = await body.QuerySelectorAsync("pre.-answer");
+                    test += "\nExpected Output: " + await (await input.GetPropertyAsync("innerText")).JsonValueAsync<string>();
                 }
                 task.Tests.Add(test);
             }
+        }
+        private static string ReadJsonTest(string filename)
+        {
+            var jsonText = File.ReadAllText(filename);
+            var json = Json.JsonSerializer.Deserialize(jsonText, typeof(object)) as Json.JsonElement?;
+            StringBuilder result = new StringBuilder();
+            json.Value.TryGetProperty("input", out var input);
+            foreach (var value in input.EnumerateObject())
+            {
+                Write(result, value.Name, value.Value);
+            }
+            json.Value.TryGetProperty("output", out var output);
+            Write(result, "Expected Output", output);
+
+            return result.ToString();
+        }
+        static Regex regexArray = new Regex(@"(?<=\d|""|\[)\s*,\s*(?=\d|""|\])");
+        static Regex regexBrackets = new Regex(@"(?<=\]|\[|\d|"")\s*(?=\]|\[|\d|"")");
+        static Regex regexBrackets2 = new Regex(@"(?<=\])\s*,\s*(?=\[)");
+        static void Write(StringBuilder result, string name, Json.JsonElement value)
+        {
+            result.Append(name);
+            result.Append(": ");
+            var text = value.ToString();
+            if (value.ValueKind == Json.JsonValueKind.Array)
+            {
+                text = regexArray.Replace(text, ",");
+                text = regexBrackets.Replace(text, "");
+                text = regexBrackets2.Replace(text, ",\n");
+            }
+            result.AppendLine(text);
         }
     }
 }
