@@ -78,7 +78,9 @@ namespace CodeSignalSolutions.Graphs.KingdomRoads
 {
     class newRoadSystemClass
     {
-        bool newRoadSystem(bool[][] roadRegister) {
+        bool newRoadSystem(bool[][] roadRegister) 
+        {
+            return false;
         }
     }
 }

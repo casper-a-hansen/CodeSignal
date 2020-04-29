@@ -255,7 +255,7 @@ namespace <area>
             {
                 source = File.ReadAllText(testPath);
 
-                if (source.Contains(task.Task)) return;
+                if (source.Contains(Fix(task.Task, true))) return;
             }
             else
             {

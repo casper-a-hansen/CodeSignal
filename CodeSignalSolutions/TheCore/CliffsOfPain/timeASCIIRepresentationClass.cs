@@ -1,6 +1,6 @@
 /*
     Status:   Unsolved
-    Imported: 2020-04-29 23:04
+    Imported: 2020-04-29 23:44
     By:       Casper
     Url:      https://app.codesignal.com/arcade/code-arcade/cliffs-of-pain/iGBDQE3KjqbYyF8DH
 
