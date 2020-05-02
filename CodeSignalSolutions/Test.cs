@@ -114,18 +114,30 @@ namespace CodeSignalSolutions
             var origColor = Console.ForegroundColor;
             try
             {
-                var e = JsonConvert.SerializeObject(expected, Formatting.Indented).Split("\r\n");
-                var r = JsonConvert.SerializeObject(result, Formatting.Indented).Split("\r\n");
-                int maxWidth = Math.Max(12, e.Max(s => s.Length));
-                var spacer = new string(' ', maxWidth);
+                var e = Transform(JsonConvert.SerializeObject(expected, Formatting.Indented)).Split("\n");
+                var r = Transform(JsonConvert.SerializeObject(result, Formatting.Indented)).Split("\n");
 
                 for (int i = 0; i < Math.Max(e.Length, r.Length); i++)
                 {
-                    var el = i < e.Length ? e[i] : "";
-                    var rl = i < r.Length ? r[i] : "<missing>";
-                    if (el != rl) Console.ForegroundColor = ConsoleColor.Red;
-                    else Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"{(el + spacer).Substring(0, maxWidth)}  {rl}");
+                    var el = i < e.Length ? e[i].Trim() : "";
+                    var rl = i < r.Length ? r[i].Trim() : "<missing>";
+                    if (el == rl)
+                    {
+                        Console.WriteLine($"Identical: {el}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Expected:  {el}");
+                        Console.WriteLine($"Result:    {rl}");
+                        Console.Write($"Difference:");
+                        for(int j = 0; j < Math.Max(el.Length, rl.Length); j++)
+                        {
+                            if (j >= el.Length || j >= rl.Length) Console.Write('^');
+                            else if (el[j] != rl[j]) Console.Write('^');
+                            else Console.Write(' ');
+                        }
+                        Console.WriteLine();
+                    }
                 }
             }
             finally
@@ -133,5 +145,16 @@ namespace CodeSignalSolutions
                 Console.ForegroundColor = origColor;
             }
         }
-     }
+
+        static Regex regexArray = new Regex(@"(?<=\d|""|\[)\s*,\s*(?=\d|""|\])");
+        static Regex regexBrackets = new Regex(@"(?<=\]|\[|\d|"")\s*(?=\]|\[|\d|"")");
+        static Regex regexBrackets2 = new Regex(@"(?<=\])\s*,\s*(?=\[)");
+        static string Transform(string json)
+        {
+            json = regexArray.Replace(json, ",");
+            json = regexBrackets.Replace(json, "");
+            json = regexBrackets2.Replace(json, ",\n");
+            return json;
+        }
+    }
 }

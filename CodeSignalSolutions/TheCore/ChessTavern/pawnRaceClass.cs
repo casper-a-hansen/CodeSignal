@@ -113,7 +113,6 @@ namespace CodeSignalSolutions.TheCore.ChessTavern
          
                 current = opponent;
             }
-            return "error";
         }
     }
 }

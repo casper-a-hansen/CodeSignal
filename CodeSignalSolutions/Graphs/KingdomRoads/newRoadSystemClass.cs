@@ -1,6 +1,6 @@
 /*
     Status:   Unsolved
-    Imported: 2020-04-29 23:04
+    Imported: 2020-05-02 08:44
     By:       Casper
     Url:      https://app.codesignal.com/arcade/graphs-arcade/kingdom-roads/nCMisf4ZKpDLdHevE
 
@@ -78,9 +78,8 @@ namespace CodeSignalSolutions.Graphs.KingdomRoads
 {
     class newRoadSystemClass
     {
-        bool newRoadSystem(bool[][] roadRegister) 
-        {
-            return false;
+        bool newRoadSystem(bool[][] roadRegister) {
+            return true;
         }
     }
 }

@@ -1,6 +1,6 @@
 /*
     Status:   Unsolved
-    Imported: 2020-04-29 23:44
+    Imported: 2020-05-02 08:44
     By:       Casper
     Url:      https://app.codesignal.com/arcade/code-arcade/cliffs-of-pain/iGBDQE3KjqbYyF8DH
 
@@ -185,29 +185,30 @@ namespace CodeSignalSolutions.TheCore.CliffsOfPain
                 "....*********....".ToArray(),
             };
         }
-        double offset = Math.Sqrt(0.5);
+        double maxDist = Math.Sqrt(0.5);
         void SetHand(char[][] clock, double pos)
         {
+            clock[8][8] = '*';
             var sin = Math.Sin(pos * Math.PI * 2.0);
             var cos = -Math.Cos((double) pos * Math.PI * 2.0);
-            Console.WriteLine($"\t{sin:N3}\t{cos:N3}");
-            for (int i = 0; i <= 8; i++)
+            for (double i = 0.0; i <= 8.0; i += 0.4)
             {
-                var y = 8 + cos * i;
-                var x = 8 + sin * i;
-                void Paint(double xoffset, double yoffset)
+                var yd = 8 + cos * i;
+                var xd = 8 + sin * i;
+
+                for(int y = (int)yd - 1; y <= (int)yd + 1; y++)
                 {
-                    var fy = (int)Math.Round(y + yoffset);
-                    if (0 > fy || fy >= clock.Length) return;
-                    var fx = (int)Math.Round(x + xoffset);
-                    if (0 > fx || fx >= clock.Length) return;
-                    clock[fy][fx] = '*';
+                    if (y < 0 || y > 17) continue;
+                    for (int x = (int)xd - 1; x <= (int)xd + 1; x++)
+                    {
+                        if (x < 0 || x > 17) continue;
+                        var dist = Math.Abs(Math.Sqrt((yd - y) * (yd - y) + (xd - x) * (xd - x)));
+                        if (dist < maxDist)
+                        {
+                            clock[y][x] = '*';
+                        }
+                    }
                 }
-                Paint(0, 0);
-        /*        Paint(offset, offset);
-                Paint(offset, -offset);
-                Paint(-offset, offset);
-                Paint(offset, -offset);*/
             }
         }
     }
