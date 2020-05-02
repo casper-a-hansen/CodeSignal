@@ -14,6 +14,7 @@ namespace CodeSignalScraper
             TaskUrl = taskUrl;
             Task = task;
             Solved = solved;
+            Failed = false;
         }
 
         public void UpdateTaskName(string name)
@@ -26,6 +27,8 @@ namespace CodeSignalScraper
         public string TaskUrl { get; private set; }
         public string Task { get; private set; }
         public bool Solved { get; private set; }
+
+        public bool Failed;
 
         public string Description;
 

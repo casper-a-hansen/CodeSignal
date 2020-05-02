@@ -1,6 +1,6 @@
 /*
-    Status:   Unsolved
-    Imported: 2020-05-02 08:44
+    Status:   Solved
+    Imported: 2020-05-02 21:38
     By:       Casper
     Url:      https://app.codesignal.com/arcade/code-arcade/cliffs-of-pain/iGBDQE3KjqbYyF8DH
 
@@ -65,7 +65,6 @@
         '*'],
         ['.', '*', '*', '*', '.', '.', '*', '.', '.', '.', '*', '*', '*', '.', '*', '*',
         '*']
-        ]
         the output should be
         timeASCIIRepresentation(dtime) = [
         ['.', '.', '.', '.', '*', '*', '*', '*', '*', '*', '*', '*', '*', '.', '.', '.',
@@ -102,7 +101,6 @@
         '.'],
         ['.', '.', '.', '.', '*', '*', '*', '*', '*', '*', '*', '*', '*', '.', '.', '.',
         '.']
-        ]
         (Enabled pixels are painted red to make them more visible).
         Here is the geometrical representation of an analog clock showing time 01:30.
         Enabled pixel are painted red.
@@ -191,11 +189,10 @@ namespace CodeSignalSolutions.TheCore.CliffsOfPain
             clock[8][8] = '*';
             var sin = Math.Sin(pos * Math.PI * 2.0);
             var cos = -Math.Cos((double) pos * Math.PI * 2.0);
-            for (double i = 0.0; i <= 8.0; i += 0.4)
+            for (double i = 0.0; i <= 8.0; i += 0.2)
             {
                 var yd = 8 + cos * i;
                 var xd = 8 + sin * i;
-
                 for(int y = (int)yd - 1; y <= (int)yd + 1; y++)
                 {
                     if (y < 0 || y > 17) continue;

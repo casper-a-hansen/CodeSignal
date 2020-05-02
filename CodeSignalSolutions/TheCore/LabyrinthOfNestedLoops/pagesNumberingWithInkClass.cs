@@ -1,6 +1,6 @@
 /*
     Status:   Solved
-    Imported: 2020-04-26 13:21
+    Imported: 2020-05-02 12:14
     By:       Casper
     Url:      https://app.codesignal.com/arcade/code-arcade/labyrinth-of-nested-loops/pdw3izd7SpMTBJqSy
 
@@ -12,59 +12,30 @@
         current page and numberOfDigits left. A page is considered numbered if it has
         the full number printed on it (e.g. if we are working with page 102 but have ink
         only for two digits then this page will not be considered numbered).
-        
-        It's
-        guaranteed that you can number the current page, and that you can't number the
-        last one in the book.
-        
+        It's guaranteed that you can number the current page, and that you can't number
+        the last one in the book.
         Example
-        
-        For current = 1 and numberOfDigits = 5, the
-        output should be
+        For current = 1 and numberOfDigits = 5, the output should be
         pagesNumberingWithInk(current, numberOfDigits) = 5.
-        
-        The
-        following numbers will be printed: 1, 2, 3, 4, 5.
-        
-        For current = 21 and
-        numberOfDigits = 5, the output should be
-        pagesNumberingWithInk(current,
-        numberOfDigits) = 22.
-        
+        The following numbers will be printed: 1, 2, 3, 4, 5.
+        For current = 21 and numberOfDigits = 5, the output should be
+        pagesNumberingWithInk(current, numberOfDigits) = 22.
         The following numbers will be printed: 21, 22.
-        
-        For
-        current = 8 and numberOfDigits = 4, the output should be
+        For current = 8 and numberOfDigits = 4, the output should be
         pagesNumberingWithInk(current, numberOfDigits) = 10.
-        
-        The following numbers will
-        be printed: 8, 9, 10.
-        
+        The following numbers will be printed: 8, 9, 10.
         Input/Output
-        
         [execution time limit] 3 seconds (cs)
         [input] integer current
-        
-        A positive integer, the number on the current page
-        which is not yet printed.
-        
+        A positive integer, the number on the current page which is not yet printed.
         Guaranteed constraints:
         1 ≤ current ≤ 1000.
-        
-        [input]
-        integer numberOfDigits
-        
-        A positive integer, the number of digits which your
-        printer can print.
-        
+        [input] integer numberOfDigits
+        A positive integer, the number of digits which your printer can print.
         Guaranteed constraints:
         1 ≤ numberOfDigits ≤ 1000.
-        
-        [output]
-        integer
-        
+        [output] integer
         The last printed page number.
-
 */
 using System;
 using System.Collections.Generic;
@@ -76,14 +47,14 @@ namespace CodeSignalSolutions.TheCore.LabyrinthOfNestedLoops
 {
     class pagesNumberingWithInkClass
     {
-        int pagesNumberingWithInk(int current, int numberOfDigits) {
-            var digitsLeft = numberOfDigits;
-            int len = 0;
-            while((len = current.ToString().Length) <= digitsLeft) {
-                current++;
-                digitsLeft -= len;
-            }
-            return current - 1;
+        int pagesNumberingWithInk(int current, int numberOfDigits) {
+            var digitsLeft = numberOfDigits;
+            int len = 0;
+            while((len = current.ToString().Length) <= digitsLeft) {
+                current++;
+                digitsLeft -= len;
+            }
+            return current - 1;
         }
     }
 }

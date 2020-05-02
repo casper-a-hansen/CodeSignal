@@ -1,6 +1,6 @@
 /*
-    Status:   Unsolved
-    Imported: 2020-05-02 08:44
+    Status:   Solved
+    Imported: 2020-05-02 23:17
     By:       Casper
     Url:      https://app.codesignal.com/arcade/graphs-arcade/kingdom-roads/nCMisf4ZKpDLdHevE
 
@@ -79,7 +79,28 @@ namespace CodeSignalSolutions.Graphs.KingdomRoads
     class newRoadSystemClass
     {
         bool newRoadSystem(bool[][] roadRegister) {
-            return true;
+            var cities = new Dictionary<int, City>();
+            for(var from = 0; from < roadRegister.Length; from++)
+            {
+                for(var to = 0; to < roadRegister[from].Length; to++)
+                {
+                    if (roadRegister[from][to])
+                    {
+                        if (!cities.ContainsKey(from))
+                        {
+                            cities.Add(from, new City());
+                        }
+                        if (!cities.ContainsKey(to))
+                        {
+                            cities.Add(to, new City());
+                        }
+                        cities[from].from++;
+                        cities[to].to++;
+                    }
+                }
+            }
+            return cities.Values.All(v => v.from == v.to);
         }
+        class City { public int from; public int to; }
     }
 }

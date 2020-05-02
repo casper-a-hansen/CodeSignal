@@ -145,16 +145,14 @@ namespace CodeSignalSolutions
                 Console.ForegroundColor = origColor;
             }
         }
-
-        static Regex regexArray = new Regex(@"(?<=\d|""|\[)\s*,\s*(?=\d|""|\])");
-        static Regex regexBrackets = new Regex(@"(?<=\]|\[|\d|"")\s*(?=\]|\[|\d|"")");
-        static Regex regexBrackets2 = new Regex(@"(?<=\])\s*,\s*(?=\[)");
         static string Transform(string json)
         {
-            json = regexArray.Replace(json, ",");
-            json = regexBrackets.Replace(json, "");
-            json = regexBrackets2.Replace(json, ",\n");
-            return json;
+            json = Regex.Replace(json, @"(?<=""[^""]*""|\w+)\s*,\s*(?=""[^""]*""|\w+)", ",");
+            json = Regex.Replace(json, @"(?<=\[|\w+)\s*(?=""[^""]*""|\w+)", "");
+            json = Regex.Replace(json, @"(?<=""[^""]*""|\w+)\s*(?=\])", "");
+            json = Regex.Replace(json, @"(?<=\])\s*,\s*(?=\[)", "," + Environment.NewLine);
+            json = Regex.Replace(json, @"(?<=\[)\s+(?=\[)", "");
+            return Regex.Replace(json, @"(?<=\])\s+(?=\])", "");
         }
     }
 }

@@ -1,6 +1,6 @@
 /*
     Status:   Solved
-    Imported: 2020-04-26 13:26
+    Imported: 2020-05-02 12:53
     By:       Casper
     Url:      https://app.codesignal.com/arcade/code-arcade/lab-of-transformations/ngQTG9kra7GE9pnnK
 
@@ -10,39 +10,26 @@
         introduced his own numeral system, which he's convinced will help clarify
         things. His numeral system has base 26, and its digits are represented by
         English capital letters - A for 0, B for 1, and so on.
-        
-        The teacher assigned you
-        the following numeral system exercise: given a one-digit number, you should find
-        all unordered pairs of one-digit numbers whose values add up to the number.
+        The teacher assigned you the following numeral system exercise: given a
+        one-digit number, you should find all unordered pairs of one-digit numbers whose
+        values add up to the number.
         Example
-        
         For number = 'G', the output should be
-        newNumeralSystem(number) = ["A +
-        G", "B + F", "C + E", "D + D"].
-        
-        Translating this into the decimal numeral
-        system we get: number = 6, so it is ["0 + 6", "1 + 5", "2 + 4", "3 + 3"].
+        newNumeralSystem(number) = ["A + G", "B + F", "C + E", "D + D"].
+        Translating this into the decimal numeral system we get: number = 6, so it is
+        ["0 + 6", "1 + 5", "2 + 4", "3 + 3"].
         Input/Output
-        
         [execution time limit] 3 seconds (cs)
-        
         [input] char number
-        
-        A
-        character representing a correct one-digit number in the new numeral system.
+        A character representing a correct one-digit number in the new numeral system.
         Guaranteed constraints:
         'A' ≤ number ≤ 'Z'.
-        
         [output] array.string
-        
-        An array of
-        strings in the format "letter1 + letter2", where "letter1" and "letter2" are
-        correct one-digit numbers in the new numeral system. The strings should be
-        sorted by "letter1".
-        
-        Note that "letter1 + letter2" and "letter2 + letter1" are
-        equal pairs and we don't consider them to be different.
-
+        An array of strings in the format "letter1 + letter2", where "letter1" and
+        "letter2" are correct one-digit numbers in the new numeral system. The strings
+        should be sorted by "letter1".
+        Note that "letter1 + letter2" and "letter2 + letter1" are equal pairs and we
+        don't consider them to be different.
 */
 using System;
 using System.Collections.Generic;
@@ -54,9 +41,9 @@ namespace CodeSignalSolutions.TheCore.LabOfTransformations
 {
     class newNumeralSystemClass
     {
-        string[] newNumeralSystem(char number) {
-            var count = (int)(number - 'A') / 2;
-            return Enumerable.Range(0, count + 1).Select(i => $"{(char)('A' + i)} + {(char)(number - i)}").ToArray();
+        string[] newNumeralSystem(char number) {
+            var count = (int)(number - 'A') / 2;
+            return Enumerable.Range(0, count + 1).Select(i => $"{(char)('A' + i)} + {(char)(number - i)}").ToArray();
         }
     }
 }

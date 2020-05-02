@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CodeSignalScraper": {
+      "commandName": "Project",
+      "commandLineArgs": "xheadless"
+    }
+  }
+}

@@ -1,6 +1,6 @@
 /*
     Status:   Solved
-    Imported: 2020-04-29 23:04
+    Imported: 2020-05-02 23:17
     By:       Casper
     Url:      https://app.codesignal.com/arcade/code-arcade/cliffs-of-pain/7g9K4ZqrmE6yad5P7
 
@@ -8,7 +8,6 @@
         Your task is to draw a special fractal after n iterations. The fractal consists
         of unit connectors '|' and '_'.
         For n = 1 the fractal looks as follows:
-        _
         _|
         Now assume that you have already made N iterations and drawn the f(N) fractal.
         To draw the f(N + 1) fractal do the following:

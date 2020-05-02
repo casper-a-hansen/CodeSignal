@@ -9,8 +9,7 @@ using PuppeteerSharp.Input;
 using System.Runtime.CompilerServices;
 using System.Reflection.Metadata;
 using System.IO;
-using Json=System.Text.Json;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 using System.Text.RegularExpressions;
 
@@ -68,47 +67,61 @@ namespace CodeSignalScraper
 
         public static async Task RetrieveTask(Page page, TaskInfo task)
         {
-            Console.WriteLine($"Reading {task.Task} of {task.Topic}.");
+            Console.Write($"Reading {task.Task} of {task.Topic}.");
 
             await page.GoToAsync(task.TaskUrl);
+            Console.Write(".");
             await page.SetViewportAsync(new ViewPortOptions() { Height = 100000, Width = 8000, HasTouch = false, IsMobile = false });
+            Console.Write(".");
             var source = await page.WaitForSelectorAsync("div.view-lines");
+            Console.Write(".");
             task.Source = await (await source.GetPropertyAsync("innerText")).JsonValueAsync<string>();
+            Console.Write(".");
             await page.SetViewportAsync(new ViewPortOptions() { Height = 800, Width = 1600, HasTouch = false, IsMobile = false });
+            Console.Write(".");
 
             var desc = await page.QuerySelectorAsync("div.markdown");
+            Console.Write(".");
             task.Description = await (await desc.GetPropertyAsync("innerText")).JsonValueAsync<string>();
+            Console.Write(".");
             var index = task.Description.IndexOf("[C#] Syntax Tips");
             if (index > 0) task.Description = task.Description.Substring(0, index);
 
             task.Tests = new List<string>();
             var list = await page.QuerySelectorAllAsync("div.accordion");
-            foreach(var item in list)
+            Console.Write(".");
+            foreach (var item in list)
             {
                 var btn = await item.QuerySelectorAsync("div.accordion--head");
+                Console.Write(".");
                 PuppeteerSharp.ElementHandle body;
                 do
                 {
                     await btn.ClickAsync();
+                    Console.Write(".");
                     body = await item.QuerySelectorAsync("div.accordion--body");
+                    Console.Write(".");
                     if (body == null) await Task.Delay(100);
                 } while (body == null);
                 string test;
                 var warning = await body.QuerySelectorAsync("div.task-tests--warning");
+                Console.Write(".");
                 if (warning != null)
                 {
                     // The test example is too big, download it.
                     var name = await (await btn.GetPropertyAsync("innerText")).JsonValueAsync<string>();
+                    Console.Write(".");
                     name = name.Replace(' ', '-') + ".json";
                     name = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads", name);
                     if (File.Exists(name)) File.Delete(name);
                     var download = await warning.QuerySelectorAsync("div.button");
+                    Console.Write(".");
                     await download.ClickAsync();
-                    int limit = 40;
+                    Console.Write(".");
+                    int limit = 80;
                     while (limit-- > 0 && !File.Exists(name))
                     {
                         await Task.Delay(250);
-
                     }
                     if (File.Exists(name))
                     {
@@ -117,6 +130,7 @@ namespace CodeSignalScraper
                     else
                     {
                         test = "Failed to download test " + name;
+                        task.Failed = true;
                     }
                 }
                 else
@@ -124,17 +138,21 @@ namespace CodeSignalScraper
                     var input = await body.QuerySelectorAsync("pre.task-tests--value");
                     if (input == null) break;
                     test = await (await input.GetPropertyAsync("innerText")).JsonValueAsync<string>();
+                    Console.Write(".");
 
                     input = await body.QuerySelectorAsync("pre.-answer");
+                    Console.Write(".");
                     test += "\nExpected Output: " + await (await input.GetPropertyAsync("innerText")).JsonValueAsync<string>();
+                    Console.Write(".");
                 }
                 task.Tests.Add(test);
             }
+            Console.WriteLine("");
         }
         private static string ReadJsonTest(string filename)
         {
             var jsonText = File.ReadAllText(filename);
-            var json = Json.JsonSerializer.Deserialize(jsonText, typeof(object)) as Json.JsonElement?;
+            var json = JsonSerializer.Deserialize(jsonText, typeof(object)) as JsonElement?;
             StringBuilder result = new StringBuilder();
             json.Value.TryGetProperty("input", out var input);
             foreach (var value in input.EnumerateObject())
@@ -146,21 +164,27 @@ namespace CodeSignalScraper
 
             return result.ToString();
         }
-        static Regex regexArray = new Regex(@"(?<=\d|""|\[)\s*,\s*(?=\d|""|\])");
-        static Regex regexBrackets = new Regex(@"(?<=\]|\[|\d|"")\s*(?=\]|\[|\d|"")");
-        static Regex regexBrackets2 = new Regex(@"(?<=\])\s*,\s*(?=\[)");
-        static void Write(StringBuilder result, string name, Json.JsonElement value)
+        static void Write(StringBuilder result, string name, JsonElement value)
         {
             result.Append(name);
             result.Append(": ");
-            var text = value.ToString();
-            if (value.ValueKind == Json.JsonValueKind.Array)
+            var json = value.ToString();
+            if (value.ValueKind == JsonValueKind.Array)
             {
-                text = regexArray.Replace(text, ",");
-                text = regexBrackets.Replace(text, "");
-                text = regexBrackets2.Replace(text, ",\n");
+                json = Regex.Replace(json, @"(?<=""[^""]*""|\w+)\s*,\s*(?=""[^""]*""|\w+)", ",");
+                json = Regex.Replace(json, @"(?<=\[|\w+)\s*(?=""[^""]*""|\w+)", "");
+                json = Regex.Replace(json, @"(?<=""[^""]*""|\w+)\s*(?=\])", "");
+                json = Regex.Replace(json, @"(?<=\])\s*,\s*(?=\[)", "," + Environment.NewLine);
+                json = Regex.Replace(json, @"(?<=\[)\s+(?=\[)", "");
+                json = Regex.Replace(json, @"(?<=\])\s+(?=\])", "");
+                json = Regex.Replace(json, @"(?<=\[[^\[\]]{1,16}\])\s*,\s*(?=\[[^\[\]]{1,16}\])", ",");
             }
-            result.AppendLine(text);
+            else if (value.ValueKind == JsonValueKind.String)
+            {
+                json = "\"" + json.Replace("\"", "\"\"") + "\"";
+            }
+            json = json.Replace("True", "true").Replace("False", "false");
+            result.AppendLine(json);
         }
     }
 }

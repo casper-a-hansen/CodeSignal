@@ -1,6 +1,6 @@
 /*
     Status:   Solved
-    Imported: 2020-04-26 13:15
+    Imported: 2020-05-02 12:07
     By:       Casper
     Url:      https://app.codesignal.com/arcade/code-arcade/intro-gates/bszFiQAog96G9CXKg
 
@@ -11,65 +11,40 @@
         sneak out, which is quite simple, especially since the exit is located right
         behind your row to the left. All you need to do is climb over your seat and make
         your way to the exit.
-        
-        The main problem is your shyness: you're afraid that
-        you'll end up blocking the view (even if only for a couple of seconds) of all
-        the people who sit behind you and in your column or the columns to your left. To
-        gain some courage, you decide to calculate the number of such people and see if
-        you can possibly make it to the exit without disturbing too many people.
-        
-        Given
-        the total number of rows and columns in the theater (nRows and nCols,
+        The main problem is your shyness: you're afraid that you'll end up blocking the
+        view (even if only for a couple of seconds) of all the people who sit behind you
+        and in your column or the columns to your left. To gain some courage, you decide
+        to calculate the number of such people and see if you can possibly make it to
+        the exit without disturbing too many people.
+        Given the total number of rows and columns in the theater (nRows and nCols,
         respectively), and the row and column you're sitting in, return the number of
         people who sit strictly behind you and in your column or to the left, assuming
         all seats are occupied.
-        
         Example
-        
-        For nCols = 16, nRows = 11, col = 5, and row =
-        3, the output should be
+        For nCols = 16, nRows = 11, col = 5, and row = 3, the output should be
         seatsInTheater(nCols, nRows, col, row) = 96.
-        
-        Here is
-        what the theater looks like:
-        
-        
+        Here is what the theater looks like:
         Input/Output
-        
-        [execution time limit] 3 seconds
-        (cs)
-        
+        [execution time limit] 3 seconds (cs)
         [input] integer nCols
-        
         An integer, the number of theater's columns.
         Guaranteed constraints:
         1 ≤ nCols ≤ 1000.
-        
         [input] integer nRows
-        
-        An integer,
-        the number of theater's rows.
-        
+        An integer, the number of theater's rows.
         Guaranteed constraints:
         1 ≤ nRows ≤ 1000.
         [input] integer col
-        
         An integer, the column number of your own seat (1-based).
         Guaranteed constraints:
         1 ≤ col ≤ nCols.
-        
         [input] integer row
-        
-        An integer, the
-        row number of your own seat (1-based).
-        
+        An integer, the row number of your own seat (1-based).
         Guaranteed constraints:
         1 ≤ row ≤ nRows.
         [output] integer
-        
-        The number of people who sit strictly behind you and in your
-        column or to the left.
-
+        The number of people who sit strictly behind you and in your column or to the
+        left.
 */
 using System;
 using System.Collections.Generic;
@@ -81,8 +56,8 @@ namespace CodeSignalSolutions.TheCore.IntroGates
 {
     class seatsInTheaterClass
     {
-        int seatsInTheater(int nCols, int nRows, int col, int row) {
-            return (nCols - col + 1) * (nRows - row);
+        int seatsInTheater(int nCols, int nRows, int col, int row) {
+            return (nCols - col + 1) * (nRows - row);
         }
     }
 }

@@ -1,6 +1,6 @@
 /*
     Status:   Solved
-    Imported: 2020-04-26 13:20
+    Imported: 2020-05-02 12:13
     By:       Casper
     Url:      https://app.codesignal.com/arcade/code-arcade/list-forest-edge/bq2XnSr5kbHqpHGJC
 
@@ -11,35 +11,21 @@
         each statue will be bigger than the previous one exactly by 1. He may need some
         additional statues to be able to accomplish that. Help him figure out the
         minimum number of additional statues needed.
-        
         Example
-        
-        For statues = [6, 2, 3,
-        8], the output should be
+        For statues = [6, 2, 3, 8], the output should be
         makeArrayConsecutive2(statues) = 3.
-        
-        Ratiorg needs
-        statues of sizes 4, 5 and 7.
-        
+        Ratiorg needs statues of sizes 4, 5 and 7.
         Input/Output
-        
-        [execution time limit] 3 seconds
-        (cs)
-        
+        [execution time limit] 3 seconds (cs)
         [input] array.integer statues
-        
         An array of distinct non-negative integers.
         Guaranteed constraints:
         1 ≤ statues.length ≤ 10,
         0 ≤ statues[i] ≤ 20.
-        
-        [output]
-        integer
-        
-        The minimal number of statues that need to be added to existing statues
-        such that it contains every integer size from an interval [L, R] (for some L, R)
-        and no other sizes.
-
+        [output] integer
+        The minimal number of statues that need to be added to existing statues such
+        that it contains every integer size from an interval [L, R] (for some L, R) and
+        no other sizes.
 */
 using System;
 using System.Collections.Generic;
@@ -51,10 +37,10 @@ namespace CodeSignalSolutions.TheCore.ListForestEdge
 {
     class makeArrayConsecutive2Class
     {
-        int makeArrayConsecutive2(int[] statues) {
-            var min = statues.Min();
-            var max = statues.Max();
-            return max - min + 1 - statues.Length;
+        int makeArrayConsecutive2(int[] statues) {
+            var min = statues.Min();
+            var max = statues.Max();
+            return max - min + 1 - statues.Length;
         }
     }
 }

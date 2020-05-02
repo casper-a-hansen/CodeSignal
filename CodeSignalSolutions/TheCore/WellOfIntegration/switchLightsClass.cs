@@ -1,6 +1,6 @@
 /*
     Status:   Solved
-    Imported: 2020-04-26 13:24
+    Imported: 2020-05-02 21:37
     By:       Casper
     Url:      https://app.codesignal.com/arcade/code-arcade/well-of-integration/x3ix7CY93z2bwKDtG
 
@@ -10,41 +10,24 @@
         candle is lit then states of this candle and all candles before it are changed
         to the opposite. Which candles will remain lit after applying the algorithm to
         all candles in the order they are placed in the line?
-        
         Example
-        
-        For a = [1, 1,
-        1, 1, 1], the output should be
+        For a = [1, 1, 1, 1, 1], the output should be
         switchLights(a) = [0, 1, 0, 1, 0].
-        
-        Check out the
-        image below for better understanding:
-        
+        Check out the image below for better understanding:
         For a = [0, 0], the output should be
         switchLights(a) = [0, 0].
-        
-        The candles are not initially lit, so their states
-        are not altered by the algorithm.
-        
+        The candles are not initially lit, so their states are not altered by the
+        algorithm.
         Input/Output
-        
-        [execution time limit] 3
-        seconds (cs)
-        
+        [execution time limit] 3 seconds (cs)
         [input] array.integer a
-        
-        Initial situation - array of zeros and
-        ones of length N, 1 means that the corresponding candle is lit.
-        
-        Guaranteed
-        constraints:
+        Initial situation - array of zeros and ones of length N, 1 means that the
+        corresponding candle is lit.
+        Guaranteed constraints:
         2 ≤ a.length ≤ 5000.
-        
         [output] array.integer
-        
-        Situation after
-        applying the algorithm - array in the same format as input with the same length.
-
+        Situation after applying the algorithm - array in the same format as input with
+        the same length.
 */
 using System;
 using System.Collections.Generic;
@@ -56,15 +39,15 @@ namespace CodeSignalSolutions.TheCore.WellOfIntegration
 {
     class switchLightsClass
     {
-        int[] switchLights(int[] a) {
-            for(var c = 0; c < a.Length; c++) {
-                if (a[c] == 1) {
-                    for(var i = 0; i <= c; i++) {
-                        a[i] = 1 - a[i];
-                    }
-                }
-            }
-            return a;
+        int[] switchLights(int[] a) {
+            for(var c = 0; c < a.Length; c++) {
+                if (a[c] == 1) {
+                    for(var i = 0; i <= c; i++) {
+                        a[i] = 1 - a[i];
+                    }
+                }
+            }
+            return a;
         }
     }
 }

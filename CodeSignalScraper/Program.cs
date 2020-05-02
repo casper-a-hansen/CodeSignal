@@ -22,7 +22,7 @@ namespace CodeSignalScraper
         static void Main(string[] args)
         {
             //new Test().SourceIndent(); return;
-            Browser().Wait();
+            Browser(args.Contains("headless", StringComparer.OrdinalIgnoreCase)).Wait();
             /* If you get an exception like this you need to close Chromium before running
              * System.AggregateException: 'One or more errors occurred. (Failed to launch 
              * Chromium! [3436:8788:0429/225643.770:ERROR:cache_util_win.cc(21)] Unable to 
@@ -30,7 +30,7 @@ namespace CodeSignalScraper
              */
         }
 
-        static async Task Browser()
+        static async Task Browser(bool headless)
         {
             Console.WriteLine("Loading chromium");
             var fetcher = new BrowserFetcher();
@@ -38,7 +38,7 @@ namespace CodeSignalScraper
             using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
             {
                 UserDataDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Puppeteer"),
-                Headless = false,
+                Headless = headless,
                 DefaultViewport = new ViewPortOptions { IsMobile = false, HasTouch = false, IsLandscape = true, Width = 1600, Height = 800 },
             });
             Console.WriteLine("Loading codesignal.com");
@@ -52,10 +52,16 @@ namespace CodeSignalScraper
             tasks = Source.FilterTasks(tasks).ToList();
             Console.WriteLine($"Retrieving {tasks.Count} task to update source and tests.");
 
+            int failed = 0;
             //            var tasks = new TaskInfo[] { new TaskInfo("https://app.codesignal.com/arcade/code-arcade", "The Core", "Cliffs Of Pain", "https://app.codesignal.com/arcade/code-arcade/cliffs-of-pain/iGBDQE3KjqbYyF8DH", "timeASCIIRepresentation", false) };
             foreach (var task in tasks)
             {
                 await Scraping.RetrieveTask(page, task);
+                if (task.Failed)
+                {
+                    failed++;
+                    continue;
+                }
                 Source.WriteTask(task);
                 task.Description = null;
                 task.Source = null;
@@ -63,6 +69,13 @@ namespace CodeSignalScraper
             }
 
             Console.WriteLine("Finished, press space to end the program.");
+            if (failed != 0)
+            {
+                Console.WriteLine();
+                Console.WriteLine($"However, failed to import {failed} tasks.");
+                Console.WriteLine($"Please, rerun to try again.");
+            }
+
             Console.ReadKey();
             await page.CloseAsync();
             await browser.CloseAsync();

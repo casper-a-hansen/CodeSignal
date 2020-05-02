@@ -164,8 +164,10 @@ namespace <area>
                     }
                     start = First(line, end + 1);
                 }
-
-                result.Append(line, start, textEnd - start + 1);
+                if (start < textEnd)
+                {
+                    result.Append(line, start, textEnd - start + 1);
+                }
                 result.AppendLine();
             }
             return result.ToString();

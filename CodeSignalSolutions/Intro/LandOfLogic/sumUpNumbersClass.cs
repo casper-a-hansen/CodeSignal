@@ -1,6 +1,6 @@
 /*
     Status:   Solved
-    Imported: 2020-04-26 13:13
+    Imported: 2020-05-02 12:06
     By:       Casper
     Url:      https://app.codesignal.com/arcade/intro/level-12/YqZwMJguZBY7Hz84T
 
@@ -10,27 +10,17 @@
         of purchased items. Since Ratiorg is a bot he is definitely going to automate
         it, so he needs a program that sums up all the numbers which appear in the given
         input.
-        
-        Help Ratiorg by writing a function that returns the sum of numbers that
-        appear in the given inputString.
-        
+        Help Ratiorg by writing a function that returns the sum of numbers that appear
+        in the given inputString.
         Example
-        
-        For inputString = "2 apples, 12
-        oranges", the output should be
+        For inputString = "2 apples, 12 oranges", the output should be
         sumUpNumbers(inputString) = 14.
-        
         Input/Output
         [execution time limit] 3 seconds (cs)
-        
         [input] string inputString
-        
-        Guaranteed
-        constraints:
+        Guaranteed constraints:
         0 ≤ inputString.length ≤ 105.
-        
         [output] integer
-
 */
 using System;
 using System.Collections.Generic;
@@ -42,9 +32,9 @@ namespace CodeSignalSolutions.Intro.LandOfLogic
 {
     class sumUpNumbersClass
     {
-        int sumUpNumbers(string inputString) {
-            var regex = new Regex(@"\d+");
-            return regex.Matches(inputString).Cast<Match>().Select(m => int.Parse(m.Value)).Sum();
+        int sumUpNumbers(string inputString) {
+            var regex = new Regex(@"\d+");
+            return regex.Matches(inputString).Cast<Match>().Select(m => int.Parse(m.Value)).Sum();
         }
     }
 }

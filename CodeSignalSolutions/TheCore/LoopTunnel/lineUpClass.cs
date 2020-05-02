@@ -1,6 +1,6 @@
 /*
     Status:   Solved
-    Imported: 2020-04-26 13:18
+    Imported: 2020-05-02 12:11
     By:       Casper
     Url:      https://app.codesignal.com/arcade/code-arcade/loop-tunnel/8rqs3BLpdKePhouQM
 
@@ -14,39 +14,22 @@
         from right, meaning they always turn right when they hear 'L' and left when they
         hear 'R'. The coach wants to know how many times the students end up facing the
         same direction.
-        
-        Given the list of commands the coach has given, count the
-        number of such commands after which the students will be facing the same
-        direction.
-        
+        Given the list of commands the coach has given, count the number of such
+        commands after which the students will be facing the same direction.
         Example
-        
         For commands = "LLARL", the output should be
         lineUp(commands) = 3.
-        
-        Let's say that there are 4 students, and the second one
-        can't tell left from right. In this case, only after the second, third and fifth
-        commands will the students face the same direction.
-        
+        Let's say that there are 4 students, and the second one can't tell left from
+        right. In this case, only after the second, third and fifth commands will the
+        students face the same direction.
         Input/Output
-        
-        [execution
-        time limit] 3 seconds (cs)
-        
+        [execution time limit] 3 seconds (cs)
         [input] string commands
-        
-        String consisting of
-        characters 'L', 'R' and 'A' only.
-        
+        String consisting of characters 'L', 'R' and 'A' only.
         Guaranteed constraints:
-        0 ≤ commands.length ≤
-        35.
-        
+        0 ≤ commands.length ≤ 35.
         [output] integer
-        
-        The number of commands after which students face the same
-        direction.
-
+        The number of commands after which students face the same direction.
 */
 using System;
 using System.Collections.Generic;
@@ -58,20 +41,20 @@ namespace CodeSignalSolutions.TheCore.LoopTunnel
 {
     class lineUpClass
     {
-        int lineUp(string commands) {
-            bool facing = true;
-            int result = 0;
-            foreach(var command in commands)
-            {
-                if (command == 'L' || command == 'R')
-                {
-                    facing = !facing;
-                    if (facing) result++;
-                } else if (facing) {
-                    result++;
-                }
-            }
-            return result;
+        int lineUp(string commands) {
+            bool facing = true;
+            int result = 0;
+            foreach(var command in commands)
+            {
+                if (command == 'L' || command == 'R')
+                {
+                    facing = !facing;
+                    if (facing) result++;
+                } else if (facing) {
+                    result++;
+                }
+            }
+            return result;
         }
     }
 }
