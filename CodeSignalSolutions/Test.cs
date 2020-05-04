@@ -55,18 +55,11 @@ namespace CodeSignalSolutions
             int success = 0;
             foreach (var test in tests)
             {
-                var obj = Activator.CreateInstance(functionClass);
-                var result = method.Invoke(obj, ParseParameters(parameters, test));
+                var p = ParseParameters(parameters, test);
                 var expected = ParseExpectedOutput(returnType, test);
-                if (Same(expected, result))
+                if (DoExecute(functionClass, method, expected, p))
                 {
-                    Console.WriteLine("Your result was as expected");
                     success++;
-                }
-                else
-                {
-                    Console.WriteLine("Your result was different from expected:");
-                    ShowDifference(expected, result);
                 }
             }
             Console.WriteLine($"You had {success} successes out of {tests.Length} tests");
@@ -75,6 +68,36 @@ namespace CodeSignalSolutions
                 Assert.AreEqual(tests.Length, success, "Not all tests was successfully.");
             }
             return success;
+        }
+        public static bool ExecuteOne(Type functionClass, object expected, params object[] parameters)
+        {
+            if (functionClass == null) throw new ArgumentNullException(nameof(functionClass));
+            if (parameters == null || parameters.Length == 0) throw new ArgumentNullException(nameof(parameters));
+            var methodName = functionClass.Name;
+            if (methodName.EndsWith("Class")) methodName = methodName.Substring(0, methodName.Length - 5);
+            var method = functionClass.GetMethod(methodName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (method == null) throw new ArgumentException("The class {functionClass.Name} does not contain the private {methodName}() {{...}}", nameof(functionClass));
+
+            return DoExecute(functionClass, method, expected, parameters);
+        }
+        static bool DoExecute(Type functionClass, MethodInfo method, object expected, object[] parameters)
+        {
+            var obj = Activator.CreateInstance(functionClass);
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+            var result = method.Invoke(obj, parameters);
+            watch.Stop();
+            if (Same(expected, result))
+            {
+                Console.WriteLine($"Your result was as expected in {watch.ElapsedMilliseconds}ms.");
+                return true;
+            }
+            else
+            {
+                Console.WriteLine($"Your result was different from expected after {watch.ElapsedMilliseconds}ms:");
+                ShowDifference(expected, result);
+                return false;
+            }
         }
         static Regex regexParameters = new Regex(@"^\s*([_a-z0-9 ]+)\s*:", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Multiline);
         static object[] ParseParameters(ParameterInfo[] parameters, string test) =>

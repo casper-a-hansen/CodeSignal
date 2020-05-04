@@ -1,6 +1,6 @@
 /*
-    Status:   Unsolved
-    Imported: 2020-05-03 00:06
+    Status:   Solved
+    Imported: 2020-05-04 22:58
     By:       Casper
     Url:      https://app.codesignal.com/arcade/graphs-arcade/kingdom-roads/ty4w8WJZ4sZSBNK5Q
 
@@ -62,7 +62,20 @@ namespace CodeSignalSolutions.Graphs.KingdomRoads
 {
     class efficientRoadNetworkClass
     {
-        bool efficientRoadNetwork(int n, int[][] roads) {
+        bool efficientRoadNetwork(int n, int[][] roads)
+        {
+            if (n <= 1) return true;
+            var cities = Enumerable.Range(0, n).Select(_ => new List<int>()).ToArray();
+            foreach(var r in roads)
+            {
+                cities[r[0]].Add(r[1]);
+                cities[r[1]].Add(r[0]);
+            }
+            foreach(var c in cities)
+            {
+                if (c.SelectMany(d => cities[d]).Concat(c).ToHashSet().Count != n)
+                    return false;
+            }
             return true;
         }
     }

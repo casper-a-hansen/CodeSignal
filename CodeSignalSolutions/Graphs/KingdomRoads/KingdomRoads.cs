@@ -6,6 +6,9 @@
 using NUnit.Framework;
 using CodeSignalSolutions;
 using CodeSignalSolutions.Graphs.KingdomRoads;
+using System.Collections.Generic;
+using System;
+using System.Linq;
 
 namespace Graphs
 {
@@ -1176,6 +1179,769 @@ namespace Graphs
                 @"n: 17
                 roads: [[4,0],[0,6],[0,9],[12,2],[8,7],[16,10],[2,1],[3,12],[4,11],[6,2],[5,12],[16,6],[0,10],[16,8],[13,16],[6,14],[9,11],[9,15],[5,8],[1,7],[11,0],[15,13],[4,10],[6,5],[9,10],[14,13],[7,16],[2,13],[7,12],[4,16],[11,8],[11,2],[14,4],[13,0],[9,6],[9,4],[15,1],[7,14],[5,1],[8,14],[6,7],[8,12],[9,14],[9,5],[3,11],[7,11],[5,4],[12,6],[10,14],[5,16],[10,6],[3,8],[1,4],[2,9],[7,0],[3,9],[12,1],[11,5],[3,7],[15,6],[14,12],[15,2],[8,10],[16,2],[12,4],[13,3],[0,12],[10,1],[9,1]]
                 Expected Output: false"
+            );
+
+            // Max test 250 cities and 35000 roads.
+            var rnd = new Random();
+            var roads = new HashSet<int>();
+            while (roads.Count != 35000)
+            {
+                var c1 = rnd.Next(250);
+                var c2 = rnd.Next(250);
+                if (c1 != c2)
+                    roads.Add(c1 * 256 + c2);
+            }
+            Test.ExecuteOne(typeof(efficientRoadNetworkClass), false, 250, roads.Select(i => new int[] { i / 256, i % 256 }).ToArray());
+        }
+        /*
+            Imported: 2020-05-04 22:58
+            By:       Casper
+            Url:      https://app.codesignal.com/arcade/graphs-arcade/kingdom-roads/wkhfpfiT6YynLk2qE
+        */
+        [Test]
+        public void financialCrisis()
+        {
+            Test.Execute(typeof(financialCrisisClass),
+                @"roadRegister:
+                [[false,true,true,false],
+                 [true,false,true,false],
+                 [true,true,false,true],
+                 [false,false,true,false]]
+                Expected Output: [[[false,true,false],[true,false,true],[false,true,false]],
+                 [[false,true,false],[true,false,true],[false,true,false]],
+                 [[false,true,false],[true,false,false],[false,false,false]],
+                 [[false,true,true],[true,false,true],[true,true,false]]]",
+                @"roadRegister: [[false]]
+                Expected Output: [[]]",
+                @"roadRegister:
+                [[false,true],
+                 [true,false]]
+                Expected Output: [[[false]],
+                 [[false]]]",
+                @"roadRegister:
+                [[false,true,false],
+                 [true,false,false],
+                 [false,false,false]]
+                Expected Output: [[[false,false],[false,false]],
+                 [[false,false],[false,false]],
+                 [[false,true],[true,false]]]",
+                @"roadRegister:
+                [[false,false,true],
+                 [false,false,false],
+                 [true,false,false]]
+                Expected Output: [[[false,false],[false,false]],
+                 [[false,true],[true,false]],
+                 [[false,false],[false,false]]]",
+                @"roadRegister:
+                [[false,false,true,true],
+                 [false,false,false,false],
+                 [true,false,false,true],
+                 [true,false,true,false]]
+                Expected Output: [[[false,false,false],[false,false,true],[false,true,false]],
+                 [[false,true,true],[true,false,true],[true,true,false]],
+                 [[false,false,true],[false,false,false],[true,false,false]],
+                 [[false,false,true],[false,false,false],[true,false,false]]]",
+                @"roadRegister:
+                [[false,false,true,true,true],
+                 [false,false,false,true,false],
+                 [true,false,false,true,false],
+                 [true,true,true,false,false],
+                 [true,false,false,false,false]]
+                Expected Output: [[[false,false,true,false],[false,false,true,false],[true,true,false,false],[false,false,false,false]],
+                 [[false,true,true,true],[true,false,true,false],[true,true,false,false],[true,false,false,false]],
+                 [[false,false,true,true],[false,false,true,false],[true,true,false,false],[true,false,false,false]],
+                 [[false,false,true,true],[false,false,false,false],[true,false,false,false],[true,false,false,false]],
+                 [[false,false,true,true],[false,false,false,true],[true,false,false,true],[true,true,true,false]]]",
+                @"roadRegister: [[false,false,false,false,true,false],
+                [false,false,true,false,true,false],
+                [false,true,false,true,true,true],
+                [false,false,true,false,false,false],
+                [true,true,true,false,false,true],
+                [false,false,true,false,true,false]]
+                Expected Output: [[[false,true,false,true,false],
+                [true,false,true,true,true],
+                [false,true,false,false,false],
+                [true,true,false,false,true],
+                [false,true,false,true,false]],
+                [[false,false,false,true,false],
+                [false,false,true,true,true],
+                [false,true,false,false,false],
+                [true,true,false,false,true],
+                [false,true,false,true,false]],
+                [[false,false,false,true,false],
+                [false,false,false,true,false],
+                [false,false,false,false,false],
+                [true,true,false,false,true],
+                [false,false,false,true,false]],
+                [[false,false,false,true,false],
+                [false,false,true,true,false],
+                [false,true,false,true,true],
+                [true,true,true,false,true],
+                [false,false,true,true,false]],
+                [[false,false,false,false,false],
+                [false,false,true,false,false],
+                [false,true,false,true,true],
+                [false,false,true,false,false],
+                [false,false,true,false,false]],
+                [[false,false,false,false,true],
+                [false,false,true,false,true],
+                [false,true,false,true,true],
+                [false,false,true,false,false],
+                [true,true,true,false,false]]]"
+            );
+        }
+        /*
+            Imported: 2020-05-04 22:58
+            By:       Casper
+            Url:      https://app.codesignal.com/arcade/graphs-arcade/kingdom-roads/d9RrPoAsHauEZ8NJD
+        */
+        [Test]
+        public void namingRoads()
+        {
+            Test.Execute(typeof(namingRoadsClass),
+                @"roads:
+                [[0,1,0],
+                 [4,1,2],
+                 [4,3,4],
+                 [2,3,1],
+                 [2,0,3]]
+                Expected Output: true",
+                @"roads:
+                [[2,3,1],
+                 [3,0,0],
+                 [2,0,2]]
+                Expected Output: false",
+                @"roads:
+                [[1,3,1],
+                 [3,0,0]]
+                Expected Output: false",
+                @"roads:
+                [[1,4,2],
+                 [6,3,3],
+                 [2,3,1],
+                 [0,1,0]]
+                Expected Output: true",
+                @"roads:
+                [[4,3,0],
+                 [1,0,4],
+                 [3,1,1],
+                 [2,4,2],
+                 [4,0,3]]
+                Expected Output: false",
+                @"roads:
+                [[5,1,3],
+                 [0,2,0],
+                 [2,4,2],
+                 [1,3,1],
+                 [8,5,5],
+                 [4,3,4]]
+                Expected Output: true",
+                @"roads:
+                [[0,6,0],
+                 [0,5,5],
+                 [0,4,8],
+                 [4,2,7],
+                 [3,2,3],
+                 [1,0,1],
+                 [1,5,6],
+                 [6,2,2],
+                 [5,4,4]]
+                Expected Output: false",
+                @"roads:
+                [[6,7,8],
+                 [6,3,6],
+                 [9,12,9],
+                 [2,1,3],
+                 [3,5,4],
+                 [0,4,2],
+                 [1,0,0],
+                 [3,2,1],
+                 [5,4,7],
+                 [4,2,5]]
+                Expected Output: true",
+                @"roads:
+                [[4,2,10],
+                 [9,4,5],
+                 [4,0,8],
+                 [0,1,23],
+                 [1,3,24],
+                 [6,4,12],
+                 [7,1,11],
+                 [9,1,9],
+                 [3,8,2],
+                 [9,6,3],
+                 [6,0,20],
+                 [0,2,13],
+                 [6,5,18],
+                 [7,6,15],
+                 [3,2,16],
+                 [6,1,21],
+                 [7,0,4],
+                 [0,5,1],
+                 [4,8,22],
+                 [2,6,7],
+                 [8,6,14],
+                 [0,9,17],
+                 [5,2,0],
+                 [4,1,19],
+                 [9,7,6]]
+                Expected Output: false",
+                @"roads:
+                [[7,9,17],
+                 [13,11,19],
+                 [4,9,8],
+                 [7,6,14],
+                 [5,6,9],
+                 [1,7,1],
+                 [5,9,15],
+                 [5,4,13],
+                 [6,0,0],
+                 [6,2,6],
+                 [10,8,18],
+                 [4,8,11],
+                 [3,9,12],
+                 [7,3,10],
+                 [6,10,16],
+                 [8,3,7],
+                 [0,8,2],
+                 [3,4,5],
+                 [2,9,4],
+                 [4,1,3]]
+                Expected Output: true",
+                @"roads: [[11,4,30],[11,13,13],[2,6,47],[14,13,15],[13,1,25],[6,12,19],[7,0,29],[11,1,43],[13,4,45],[1,10,40],[2,1,0],[7,5,42],[9,4,10],[11,9,4],[8,9,44],[3,11,11],[3,9,14],[11,2,34],[8,4,9],[1,0,5],[0,4,3],[6,4,20],[7,2,12],[10,6,46],[8,0,8],[10,4,17],[11,5,38],[14,0,37],[0,5,21],[7,3,39],[14,8,24],[0,3,26],[5,10,48],[14,11,27],[12,5,22],[12,2,23],[6,8,1],[3,13,33],[14,5,36],[14,3,6],[1,14,41],[10,9,28],[4,5,32],[11,0,7],[7,12,2],[4,12,18],[5,8,31],[10,14,35],[8,1,16]]
+                Expected Output: false",
+                @"roads: [[4,5,12],[14,9,44],[14,5,29],[9,2,8],[1,14,5],[4,9,25],[3,10,14],[5,12,33],[8,7,34],[7,4,18],[15,10,49],[13,8,41],[3,14,11],[4,10,20],[4,13,15],[6,4,23],[6,2,13],[3,2,6],[11,5,26],[9,6,35],[14,16,53],[12,0,4],[6,12,37],[12,7,40],[15,8,45],[12,10,47],[12,4,28],[13,9,48],[6,10,27],[13,14,51],[9,7,38],[8,10,39],[1,3,1],[2,13,10],[7,14,42],[7,11,36],[2,0,0],[0,9,2],[3,8,19],[9,11,46],[11,1,3],[5,13,22],[14,2,16],[12,1,9],[8,5,24],[12,8,43],[3,6,17],[5,9,31],[15,11,52],[7,6,30],[7,10,32],[12,11,50],[3,11,21],[1,5,7]]
+                Expected Output: true"
+            );
+        }
+        /*
+            Imported: 2020-05-04 22:58
+            By:       Casper
+            Url:      https://app.codesignal.com/arcade/graphs-arcade/kingdom-roads/5Emk5PFgFBWR4YiCo
+        */
+        [Test]
+        public void greatRenaming()
+        {
+            Test.Execute(typeof(greatRenamingClass),
+                @"roadRegister:
+                [[false,true,true,false],
+                 [true,false,true,false],
+                 [true,true,false,true],
+                 [false,false,true,false]]
+                Expected Output: [[false,false,false,true],
+                 [false,false,true,true],
+                 [false,true,false,true],
+                 [true,true,true,false]]",
+                @"roadRegister:
+                [[false,false],
+                 [false,false]]
+                Expected Output: [[false,false],
+                 [false,false]]",
+                @"roadRegister:
+                [[false,true,true],
+                 [true,false,true],
+                 [true,true,false]]
+                Expected Output: [[false,true,true],
+                 [true,false,true],
+                 [true,true,false]]",
+                @"roadRegister:
+                [[false,true,true],
+                 [true,false,false],
+                 [true,false,false]]
+                Expected Output: [[false,true,false],
+                 [true,false,true],
+                 [false,true,false]]",
+                @"roadRegister:
+                [[false,false,false,true],
+                 [false,false,true,true],
+                 [false,true,false,false],
+                 [true,true,false,false]]
+                Expected Output: [[false,true,true,false],
+                 [true,false,false,false],
+                 [true,false,false,true],
+                 [false,false,true,false]]",
+                @"roadRegister:
+                [[false,false,false,true,false],
+                 [false,false,true,false,false],
+                 [false,true,false,false,true],
+                 [true,false,false,false,true],
+                 [false,false,true,true,false]]
+                Expected Output: [[false,false,false,true,true],
+                 [false,false,false,false,true],
+                 [false,false,false,true,false],
+                 [true,false,true,false,false],
+                 [true,true,false,false,false]]",
+                @"roadRegister:
+                [[false,false,true,false,false,false],
+                 [false,false,true,false,true,false],
+                 [true,true,false,false,false,false],
+                 [false,false,false,false,true,false],
+                 [false,true,false,true,false,false],
+                 [false,false,false,false,false,false]]
+                Expected Output: [[false,false,false,false,false,false],
+                 [false,false,false,true,false,false],
+                 [false,false,false,true,false,true],
+                 [false,true,true,false,false,false],
+                 [false,false,false,false,false,true],
+                 [false,false,true,false,true,false]]",
+                @"roadRegister:
+                [[false,true,true,false,true,false,false],
+                 [true,false,false,false,true,false,true],
+                 [true,false,false,false,true,true,false],
+                 [false,false,false,false,false,false,false],
+                 [true,true,true,false,false,true,false],
+                 [false,false,true,false,true,false,false],
+                 [false,true,false,false,false,false,false]]
+                Expected Output: [[false,false,true,false,false,false,false],
+                 [false,false,true,true,false,true,false],
+                 [true,true,false,false,false,true,false],
+                 [false,true,false,false,false,true,true],
+                 [false,false,false,false,false,false,false],
+                 [false,true,true,true,false,false,true],
+                 [false,false,false,true,false,true,false]]",
+                @"roadRegister:
+                [[false,false,true,true,true,true,true,true],
+                 [false,false,true,false,true,true,true,true],
+                 [true,true,false,true,true,true,false,false],
+                 [true,false,true,false,false,true,false,false],
+                 [true,true,true,false,false,true,true,true],
+                 [true,true,true,true,true,false,false,true],
+                 [true,true,false,false,true,false,false,false],
+                 [true,true,false,false,true,true,false,false]]
+                Expected Output: [[false,true,true,false,false,true,true,false],
+                 [true,false,false,true,true,true,true,true],
+                 [true,false,false,true,false,true,true,true],
+                 [false,true,true,false,true,true,true,false],
+                 [false,true,false,true,false,false,true,false],
+                 [true,true,true,true,false,false,true,true],
+                 [true,true,true,true,true,true,false,false],
+                 [false,true,true,false,false,true,false,false]]",
+                @"roadRegister:
+                [[false,true,false,true,true,false,false,false,true],
+                 [true,false,true,false,true,false,false,false,false],
+                 [false,true,false,true,true,false,false,false,true],
+                 [true,false,true,false,false,true,false,false,true],
+                 [true,true,true,false,false,true,true,true,false],
+                 [false,false,false,true,true,false,true,true,false],
+                 [false,false,false,false,true,true,false,false,true],
+                 [false,false,false,false,true,true,false,false,true],
+                 [true,false,true,true,false,false,true,true,false]]
+                Expected Output: [[false,true,false,true,true,false,false,true,true],
+                 [true,false,true,false,true,true,false,false,false],
+                 [false,true,false,true,false,true,false,false,false],
+                 [true,false,true,false,true,true,false,false,false],
+                 [true,true,false,true,false,false,true,false,false],
+                 [false,true,true,true,false,false,true,true,true],
+                 [false,false,false,false,true,true,false,true,true],
+                 [true,false,false,false,false,true,true,false,false],
+                 [true,false,false,false,false,true,true,false,false]]"
+            );
+        }
+        /*
+            Imported: 2020-05-04 22:58
+            By:       Casper
+            Url:      https://app.codesignal.com/arcade/graphs-arcade/kingdom-roads/pmmMeP4JkqgKbzyTy
+        */
+        [Test]
+        public void citiesConquering()
+        {
+            Test.Execute(typeof(citiesConqueringClass),
+                @"n: 10
+                roads:
+                [[1,0],
+                 [1,2],
+                 [8,5],
+                 [9,7],
+                 [5,6],
+                 [5,4],
+                 [4,6],
+                 [6,7]]
+                Expected Output: [1, 2, 1, 1, -1, -1, -1, 2, 1, 1]",
+                @"n: 5
+                roads: []
+                Expected Output: [1, 1, 1, 1, 1]",
+                @"n: 6
+                roads:
+                [[0,1],
+                 [1,2],
+                 [2,3],
+                 [3,4],
+                 [4,5],
+                 [5,0]]
+                Expected Output: [-1, -1, -1, -1, -1, -1]",
+                @"n: 8
+                roads:
+                [[0,1],
+                 [1,2],
+                 [2,3],
+                 [3,4],
+                 [4,5],
+                 [5,6],
+                 [6,7]]
+                Expected Output: [1, 2, 3, 4, 4, 3, 2, 1]",
+                @"n: 2
+                roads: []
+                Expected Output: [1, 1]",
+                @"n: 17
+                roads:
+                [[0,13],
+                 [12,5],
+                 [7,3],
+                 [9,4],
+                 [13,11],
+                 [1,16],
+                 [1,0],
+                 [11,7],
+                 [12,9]]
+                Expected Output: [3, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 3, 2, 4, 1, 1, 1]",
+                @"n: 11
+                roads:
+                [[4,10],
+                 [2,0],
+                 [5,4],
+                 [6,1],
+                 [3,2],
+                 [8,3],
+                 [7,3],
+                 [4,6],
+                 [1,2],
+                 [5,0]]
+                Expected Output: [-1, -1, -1, 2, -1, -1, -1, 1, 1, 1, 1]",
+                @"n: 24
+                roads:
+                [[17,0],
+                 [0,16],
+                 [16,10],
+                 [20,9],
+                 [21,0],
+                 [12,13],
+                 [19,9],
+                 [13,21],
+                 [3,18],
+                 [20,7],
+                 [4,3],
+                 [12,20],
+                 [6,20],
+                 [10,17]]
+                Expected Output: [-1, 1, 1, 2, 1, 1, 1, 1, 1, 2, -1, 1, 4, 5, 1, 1, -1, -1, 1, 1, 3, 6, 1, 1]",
+                @"n: 30
+                roads:
+                [[20,12],
+                 [22,25],
+                 [21,29],
+                 [29,13],
+                 [11,1],
+                 [2,19],
+                 [10,24],
+                 [1,20],
+                 [1,21],
+                 [24,6],
+                 [23,2],
+                 [22,23],
+                 [10,0],
+                 [5,1],
+                 [4,22],
+                 [7,15],
+                 [18,4],
+                 [8,5],
+                 [11,13],
+                 [27,13],
+                 [9,6],
+                 [24,4]]
+                Expected Output: [1, -1, 2, 1, 4, 2, 2, 1, 1, 1, 2, -1, 1, -1, 1, 1, 1, 1, 1, 1, 2, -1, 4, 3, 3, 1, 1, 1, 1, -1]",
+                @"n: 5
+                roads: [[3,2]]
+                Expected Output: [1, 1, 1, 1, 1]",
+                @"n: 29
+                roads:
+                [[14,21],
+                 [16,20],
+                 [2,7],
+                 [24,19],
+                 [28,25],
+                 [26,2],
+                 [16,27],
+                 [4,12],
+                 [26,25],
+                 [22,10],
+                 [15,13],
+                 [18,13],
+                 [28,1],
+                 [19,17],
+                 [0,6],
+                 [11,28]]
+                Expected Output: [1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 3, 3, 1, 2]",
+                @"n: 6
+                roads:
+                [[0,3],
+                 [2,0],
+                 [3,1]]
+                Expected Output: [2, 1, 1, 2, 1, 1]",
+                @"n: 30
+                roads:
+                [[11,12],
+                 [6,15],
+                 [8,21],
+                 [6,16],
+                 [2,4],
+                 [3,0],
+                 [9,11],
+                 [18,28],
+                 [23,1],
+                 [27,10],
+                 [3,4],
+                 [14,2],
+                 [3,11],
+                 [19,13],
+                 [5,20],
+                 [9,25],
+                 [16,25],
+                 [3,2],
+                 [14,28]]
+                Expected Output: [1, 1, -1, -1, -1, 1, 2, 1, 1, 5, 1, 6, 1, 1, 3, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 1, 2, 1]"
+            );
+        }
+        /*
+            Imported: 2020-05-04 22:59
+            By:       Casper
+            Url:      https://app.codesignal.com/arcade/graphs-arcade/kingdom-roads/YRPT3woWzSnYmBudH
+        */
+        [Test]
+        public void mergingCities()
+        {
+            Test.Execute(typeof(mergingCitiesClass),
+                @"roadRegister:
+                [[false,true,true,false,false,false,true],
+                 [true,false,true,false,true,false,false],
+                 [true,true,false,true,false,false,true],
+                 [false,false,true,false,false,true,true],
+                 [false,true,false,false,false,false,false],
+                 [false,false,false,true,false,false,false],
+                 [true,false,true,true,false,false,false]]
+                Expected Output: [[false,true,true,false,true],
+                 [true,false,false,true,true],
+                 [true,false,false,false,false],
+                 [false,true,false,false,false],
+                 [true,true,false,false,false]]",
+                @"roadRegister:
+                [[false,false,false],
+                 [false,false,false],
+                 [false,false,false]]
+                Expected Output: [[false,false,false],
+                 [false,false,false],
+                 [false,false,false]]",
+                @"roadRegister: [[false]]
+                Expected Output: [[false]]",
+                @"roadRegister:
+                [[false,true],
+                 [true,false]]
+                Expected Output: [[false]]",
+                @"roadRegister:
+                [[false,false],
+                 [false,false]]
+                Expected Output: [[false,false],
+                 [false,false]]",
+                @"roadRegister:
+                [[false,true,true],
+                 [true,false,true],
+                 [true,true,false]]
+                Expected Output: [[false,true],
+                 [true,false]]",
+                @"roadRegister:
+                [[false,false,true],
+                 [false,false,false],
+                 [true,false,false]]
+                Expected Output: [[false,false,true],
+                 [false,false,false],
+                 [true,false,false]]",
+                @"roadRegister:
+                [[false,false,true,true],
+                 [false,false,false,false],
+                 [true,false,false,true],
+                 [true,false,true,false]]
+                Expected Output: [[false,false,true],
+                 [false,false,false],
+                 [true,false,false]]",
+                @"roadRegister:
+                [[false,true,true,false,true,true,true,false],
+                 [true,false,false,false,true,false,false,false],
+                 [true,false,false,true,false,true,true,true],
+                 [false,false,true,false,true,false,false,false],
+                 [true,true,false,true,false,true,false,false],
+                 [true,false,true,false,true,false,false,false],
+                 [true,false,true,false,false,false,false,false],
+                 [false,false,true,false,false,false,false,false]]
+                Expected Output: [[false,true,true,true,false],
+                 [true,false,true,true,true],
+                 [true,true,false,false,false],
+                 [true,true,false,false,false],
+                 [false,true,false,false,false]]",
+                @"roadRegister:
+                [[false,true,false,true,true,true,false,false,false,true],
+                 [true,false,false,false,false,true,false,false,false,true],
+                 [false,false,false,true,true,true,false,false,true,true],
+                 [true,false,true,false,false,true,false,true,false,true],
+                 [true,false,true,false,false,true,false,true,false,true],
+                 [true,true,true,true,true,false,false,true,false,false],
+                 [false,false,false,false,false,false,false,false,false,false],
+                 [false,false,false,true,true,true,false,false,false,true],
+                 [false,false,true,false,false,false,false,false,false,false],
+                 [true,true,true,true,true,false,false,true,false,false]]
+                Expected Output: [[false,true,true,false,false,false,true],
+                 [true,false,true,false,true,true,true],
+                 [true,true,false,false,true,false,true],
+                 [false,false,false,false,false,false,false],
+                 [false,true,true,false,false,false,true],
+                 [false,true,false,false,false,false,false],
+                 [true,true,true,false,true,false,false]]",
+                @"roadRegister:
+                [[false,true,true,true,false],
+                 [true,false,true,true,true],
+                 [true,true,false,false,true],
+                 [true,true,false,false,false],
+                 [false,true,true,false,false]]
+                Expected Output: [[false,true,true,true],
+                 [true,false,false,true],
+                 [true,false,false,false],
+                 [true,true,false,false]]",
+                @"roadRegister:
+                [[false,true,true,false,false,false,false],
+                 [true,false,false,false,true,false,true],
+                 [true,false,false,false,true,true,true],
+                 [false,false,false,false,true,true,true],
+                 [false,true,true,true,false,false,false],
+                 [false,false,true,true,false,false,true],
+                 [false,true,true,true,false,true,false]]
+                Expected Output: [[false,true,false,true,false,true],
+                 [true,false,false,true,true,true],
+                 [false,false,false,true,true,true],
+                 [true,true,true,false,false,false],
+                 [false,true,true,false,false,true],
+                 [true,true,true,false,true,false]]",
+                @"roadRegister:
+                [[false,true,false,true,true],
+                 [true,false,true,true,true],
+                 [false,true,false,false,false],
+                 [true,true,false,false,true],
+                 [true,true,false,true,false]]
+                Expected Output: [[false,true,true,true],
+                 [true,false,false,false],
+                 [true,false,false,true],
+                 [true,false,true,false]]",
+                @"roadRegister:
+                [[false,true,true,false,true,true,false],
+                 [true,false,true,false,false,false,false],
+                 [true,true,false,true,false,true,true],
+                 [false,false,true,false,false,false,true],
+                 [true,false,false,false,false,false,false],
+                 [true,false,true,false,false,false,true],
+                 [false,false,true,true,false,true,false]]
+                Expected Output: [[false,true,true,true,false],
+                 [true,false,false,true,true],
+                 [true,false,false,false,false],
+                 [true,true,false,false,true],
+                 [false,true,false,true,false]]",
+                @"roadRegister:
+                [[false,false,true,false,false,false,false,true,false,true],
+                 [false,false,true,true,false,true,true,false,false,true],
+                 [true,true,false,true,false,true,false,true,false,false],
+                 [false,true,true,false,false,true,true,false,false,true],
+                 [false,false,false,false,false,true,true,false,false,true],
+                 [false,true,true,true,true,false,false,false,false,false],
+                 [false,true,false,true,true,false,false,false,true,true],
+                 [true,false,true,false,false,false,false,false,false,false],
+                 [false,false,false,false,false,false,true,false,false,true],
+                 [true,true,false,true,true,false,true,false,true,false]]
+                Expected Output: [[false,false,true,false,false,true,true],
+                 [false,false,true,true,true,false,true],
+                 [true,true,false,true,true,true,true],
+                 [false,true,true,false,true,false,true],
+                 [false,true,true,true,false,false,true],
+                 [true,false,true,false,false,false,false],
+                 [true,true,true,true,true,false,false]]"
+            );
+        }
+        /*
+            Imported: 2020-05-04 22:59
+            By:       Casper
+            Url:      https://app.codesignal.com/arcade/graphs-arcade/kingdom-roads/qsRNQ2iR5xRzidNGW
+        */
+        [Test]
+        public void livingOnTheRoads()
+        {
+            Test.Execute(typeof(livingOnTheRoadsClass),
+                @"roadRegister:
+                [[false,true,true,false,false,false],
+                 [true,false,false,true,false,false],
+                 [true,false,false,false,false,false],
+                 [false,true,false,false,false,false],
+                 [false,false,false,false,false,true],
+                 [false,false,false,false,true,false]]
+                Expected Output: [[false,true,true,false],
+                 [true,false,false,false],
+                 [true,false,false,false],
+                 [false,false,false,false]]",
+                @"roadRegister: [[false]]
+                Expected Output: []",
+                @"roadRegister:
+                [[false,false],
+                 [false,false]]
+                Expected Output: []",
+                @"roadRegister:
+                [[false,true],
+                 [true,false]]
+                Expected Output: [[false]]",
+                @"roadRegister:
+                [[false,true,true],
+                 [true,false,true],
+                 [true,true,false]]
+                Expected Output: [[false,true,true],
+                 [true,false,true],
+                 [true,true,false]]",
+                @"roadRegister:
+                [[false,false,true],
+                 [false,false,true],
+                 [true,true,false]]
+                Expected Output: [[false,true],
+                 [true,false]]",
+                @"roadRegister:
+                [[false,true,true,true],
+                 [true,false,false,true],
+                 [true,false,false,true],
+                 [true,true,true,false]]
+                Expected Output: [[false,true,true,true,false],
+                 [true,false,true,false,true],
+                 [true,true,false,true,true],
+                 [true,false,true,false,true],
+                 [false,true,true,true,false]]",
+                @"roadRegister:
+                [[false,true,true,false,true],
+                 [true,false,true,true,false],
+                 [true,true,false,false,true],
+                 [false,true,false,false,false],
+                 [true,false,true,false,false]]
+                Expected Output: [[false,true,true,true,true,false],
+                 [true,false,true,true,false,true],
+                 [true,true,false,false,false,true],
+                 [true,true,false,false,true,true],
+                 [true,false,false,true,false,false],
+                 [false,true,true,true,false,false]]",
+                @"roadRegister:
+                [[false,true,false,true,false,true],
+                 [true,false,true,false,false,true],
+                 [false,true,false,true,true,true],
+                 [true,false,true,false,true,false],
+                 [false,false,true,true,false,false],
+                 [true,true,true,false,false,false]]
+                Expected Output: [[false,true,true,true,true,false,false,false,false],
+                 [true,false,true,false,false,true,false,false,true],
+                 [true,true,false,false,true,false,false,true,false],
+                 [true,false,false,false,true,true,true,true,false],
+                 [true,false,true,true,false,false,false,true,false],
+                 [false,true,false,true,false,false,true,true,true],
+                 [false,false,false,true,false,true,false,true,true],
+                 [false,false,true,true,true,true,true,false,false],
+                 [false,true,false,false,false,true,true,false,false]]"
             );
         }
     }

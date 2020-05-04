@@ -84,7 +84,6 @@ namespace CodeSignalSolutions.TheCore.ChessTavern
                 Console.WriteLine(string.Join(" - ", piece));
                 current = opponent;
             }
-            return "error";
         }
     }
 }

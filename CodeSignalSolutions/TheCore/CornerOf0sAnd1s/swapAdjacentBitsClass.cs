@@ -38,7 +38,7 @@ namespace CodeSignalSolutions.TheCore.CornerOf0sAnd1s
     {
         int swapAdjacentBits(int n)
         {
-          return (int)(((n & 0x55555555) << 1) | ((n & 0xAAAAAAAA) >> 1));
+          return (int)((((uint)n & 0x55555555) << 1) | (((uint)n & 0xAAAAAAAA) >> 1));
         }
     }
 }
