@@ -53,7 +53,7 @@ Expected Output:
 [""A"", ""B"", ""C""]
 " + test));
             Assert.AreEqual(0, Test.Execute(typeof(CodeSignalSolutions.thirdClass), test));
-
+            Test.AssertSuccess = true;
         }
     }
 

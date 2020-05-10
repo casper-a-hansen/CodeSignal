@@ -39,7 +39,7 @@ namespace CodeSignalSolutions.Intro.IslandOfKnowledge
     class isIPv4AddressClass
     {
         bool isIPv4Address(string inputString) {
-            Regex regex = new Regex(@"^\d{1,3}$");
+            Regex regex = new Regex(@"^(?:0|(?:[1-9]\d{0,2}))$");
             var split = inputString.Split('.');
             if (split.Length != 4) return false;
             if (split.Any(s => s=="")) return false;

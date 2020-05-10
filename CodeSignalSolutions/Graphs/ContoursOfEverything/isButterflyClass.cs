@@ -1,6 +1,6 @@
 /*
-    Status:   Unsolved
-    Imported: 2020-05-04 22:59
+    Status:   Solved
+    Imported: 2020-05-10 12:52
     By:       Casper
     Url:      https://app.codesignal.com/arcade/graphs-arcade/contours-of-everything/shHv7RjLBCrDFN3np
 
@@ -45,7 +45,20 @@ namespace CodeSignalSolutions.Graphs.ContoursOfEverything
     class isButterflyClass
     {
         bool isButterfly(bool[][] adj) {
-            return true;
+            var cities = new int[5];
+            for(var f = 0; f < 5; f++)
+            {
+                for(var t = f; t < 5; t++)
+                {
+                    if (adj[f][t])
+                    {
+                        cities[f]++;
+                        cities[t]++;
+                    }
+                }
+            }
+            Console.WriteLine(string.Join(",", cities));
+            return cities.Count(c => c == 2) == 4 && cities.Count(c => c == 4) == 1;
         }
     }
 }

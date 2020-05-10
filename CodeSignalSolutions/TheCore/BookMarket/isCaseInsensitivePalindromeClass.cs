@@ -26,6 +26,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -34,7 +35,15 @@ namespace CodeSignalSolutions.TheCore.BookMarket
     class isCaseInsensitivePalindromeClass
     {
         bool isCaseInsensitivePalindrome(string inputString) {
-            return inputString.Equals(string.Join("", inputString.Reverse()), StringComparison.CurrentCultureIgnoreCase);
+            if (string.IsNullOrEmpty(inputString)) return true;
+            for(var i = 0; i < inputString.Length / 2; i++)
+            {
+                if (!inputString[i].ToString().Equals(inputString[inputString.Length - i - 1].ToString(), StringComparison.OrdinalIgnoreCase))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }
