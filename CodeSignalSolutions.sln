@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeSignalSolutions", "Code
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeSignalScraper", "CodeSignalScraper\CodeSignalScraper.csproj", "{212094CE-8CC9-4549-ADBD-73D0C14090C9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp2", "ConsoleApp2\ConsoleApp2.csproj", "{81BE0E5C-C191-4E1E-AAFE-1E31E5AA55D0}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,18 +41,6 @@ Global
 		{212094CE-8CC9-4549-ADBD-73D0C14090C9}.Release|x64.Build.0 = Release|Any CPU
 		{212094CE-8CC9-4549-ADBD-73D0C14090C9}.Release|x86.ActiveCfg = Release|Any CPU
 		{212094CE-8CC9-4549-ADBD-73D0C14090C9}.Release|x86.Build.0 = Release|Any CPU
-		{81BE0E5C-C191-4E1E-AAFE-1E31E5AA55D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{81BE0E5C-C191-4E1E-AAFE-1E31E5AA55D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{81BE0E5C-C191-4E1E-AAFE-1E31E5AA55D0}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{81BE0E5C-C191-4E1E-AAFE-1E31E5AA55D0}.Debug|x64.Build.0 = Debug|Any CPU
-		{81BE0E5C-C191-4E1E-AAFE-1E31E5AA55D0}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{81BE0E5C-C191-4E1E-AAFE-1E31E5AA55D0}.Debug|x86.Build.0 = Debug|Any CPU
-		{81BE0E5C-C191-4E1E-AAFE-1E31E5AA55D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{81BE0E5C-C191-4E1E-AAFE-1E31E5AA55D0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{81BE0E5C-C191-4E1E-AAFE-1E31E5AA55D0}.Release|x64.ActiveCfg = Release|Any CPU
-		{81BE0E5C-C191-4E1E-AAFE-1E31E5AA55D0}.Release|x64.Build.0 = Release|Any CPU
-		{81BE0E5C-C191-4E1E-AAFE-1E31E5AA55D0}.Release|x86.ActiveCfg = Release|Any CPU
-		{81BE0E5C-C191-4E1E-AAFE-1E31E5AA55D0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

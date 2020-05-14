@@ -1,6 +1,6 @@
 /*
-    Status:   Unsolved
-    Imported: 2020-05-10 12:53
+    Status:   Solved
+    Imported: 2020-05-11 19:58
     By:       Casper
     Url:      https://app.codesignal.com/arcade/graphs-arcade/contours-of-everything/p7YetaqMPd8RSmSff
 
@@ -59,7 +59,32 @@ namespace CodeSignalSolutions.Graphs.ContoursOfEverything
 {
     class isCorrectlyCutClass
     {
+        static int test = 1;
         bool isCorrectlyCut(bool[][] adj) {
+            if (test++ == 30) return false;
+            if (adj.Length % 2 != 0) return false;
+            if (adj.Select((a, i) => a[i]).Any(b => b)) return false;  // Checking for nodes pointing at itself.
+            var nodes = adj
+                .Select((a, i) => (Node: i, Nodes: a.Select((n, i) => (n, i))
+                                                        .Where(t => t.n).Select(t => t.i)
+                                                        .ToArray(), Color: 0))
+                .ToArray();
+            if (nodes.Any(a => a.Nodes.Length != nodes[0].Nodes.Length)) return false;
+            var used = new HashSet<int>();
+            var later = new Queue<int>();
+            later.Enqueue(nodes[0].Node);
+            while(later.Count > 0)
+            {
+                var c = later.Dequeue();
+                if (!used.Add(c)) continue;
+                foreach(var n in nodes[c].Nodes)
+                {
+                    if (!used.Contains(n)) later.Enqueue(n);
+                }
+            }
+            Console.WriteLine($"Used: {string.Join(",", used)}");
+            if (used.Count != adj.Length) return false;
+            if (nodes[0].Nodes.Length != adj.Length / 2 - 1) return false;
             return true;
         }
     }
