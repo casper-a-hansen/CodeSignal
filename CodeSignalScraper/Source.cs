@@ -3,6 +3,7 @@ using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -79,12 +80,11 @@ namespace <area>
         private static Regex regexStatus = new Regex(@"^\s*Status\s*:\s*((?:Uns|S)olved)\s*$", RegexOptions.Compiled | RegexOptions.Multiline);
         private static bool IsSourceFinal(TaskInfo task)
         {
-            var sourcePath = Path.Combine(SourcePath, ReplaceText(ClassFileName, task));
+            // The task is not solved yet so no need to update source file.
+            if (!task.Solved) return false;
+            var sourcePath = FindFilename(task);
             if (File.Exists(sourcePath))
             {
-                // The task is not solved yet so no need to update source file.
-                if (!task.Solved) return false;
-
                 // Check if source contains the Solved source.
                 var source = File.ReadAllText(sourcePath);
                 var match = regexStatus.Match(source);
@@ -93,6 +93,31 @@ namespace <area>
             return false;
         }
 
+        private static Regex regexTo = new Regex("to", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static string FindFilename(TaskInfo task)
+        {
+            var filename = ReplaceText(ClassFileName, task);
+            var sourcePath = Path.Combine(SourcePath, filename);
+            if (File.Exists(sourcePath)) return sourcePath;
+            var originalName = task.Task;
+            var matches = regexTo.Matches(originalName);
+            var indexes = matches.Select(m => m.Index).ToArray();
+            var max = 1 << matches.Count;
+            for (var i = 1; i < max; i++)
+            {
+                var name = regexTo.Replace(originalName, m => {
+                    var index = Array.IndexOf(indexes, m.Index);
+                    if ((1 << index & i) != 0) return "2";
+                    else return m.Value;
+                });
+                task.UpdateTaskName(name);
+                filename = ReplaceText(ClassFileName, task);
+                var path = Path.Combine(SourcePath, filename);
+                if (File.Exists(path)) return path;
+            }
+            task.UpdateTaskName(originalName);
+            return sourcePath;
+        }
         private static Regex regexParameter = new Regex(@"<(\w+)>", RegexOptions.Compiled);
         public static string ReplaceText(string source, TaskInfo task)
         {

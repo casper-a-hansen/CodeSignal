@@ -1,6 +1,6 @@
 /*
-    Status:   Unsolved
-    Imported: 2020-05-14 23:38
+    Status:   Solved
+    Imported: 2020-05-17 19:23
     By:       Casper
     Url:      https://app.codesignal.com/arcade/graphs-arcade/in-the-pseudoforest/GeaKuCxLvje3bfsBx
 
@@ -73,7 +73,30 @@ namespace CodeSignalSolutions.Graphs.InThePseudoforest
     class burningTheWoodClass
     {
         int[] burningTheWood(int n, int[][] wmap, int start, int k) {
-            return null;
+            var dic = wmap
+                .SelectMany(a => new int[][]{a, new []{a[1],a[0]}})
+                .GroupBy(a => a[0])
+                .ToDictionary(g => g.Key, g => g.Select(a => a[1]).ToArray());
+            var burned = new bool[n];
+            var result = new List<int>();
+            var fire = new List<int>{start};
+            for(var i = -1; i < k; i++)
+            {
+                var nextFire = new List<int>();
+                foreach(var f in fire)
+                {
+                    if (burned[f]) continue;
+                    burned[f] = true;
+                    result.Add(f);
+                    if (dic.TryGetValue(f, out var list))
+                    {
+                        nextFire.AddRange(list);
+                    }
+                }
+                fire = nextFire;
+            }
+            result.Sort();
+            return result.ToArray();
         }
     }
 }
