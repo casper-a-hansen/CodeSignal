@@ -1,6 +1,6 @@
 /*
-    Status:   Unsolved
-    Imported: 2020-05-23 21:03
+    Status:   Solved
+    Imported: 2020-05-29 07:39
     By:       Casper
     Url:      https://app.codesignal.com/arcade/graphs-arcade/neverending-grids/HY68Gv9BWPLefQ7CT
 
@@ -63,8 +63,78 @@ namespace CodeSignalSolutions.Graphs.NeverendingGrids
 {
     class digitJumpingClass
     {
-        int digitJumping(int[][] grid, int[] start, int[] finish) {
-            return 0;
+        int digitJumping(int[][] grid, int[] start, int[] finish)
+        {
+            Dictionary<int, (int distance, int row, int column)> startDic = new Dictionary<int, (int distance, int row, int column)>();
+            startDic.Add(grid[start[0]][start[1]], (0, start[0], start[1]));
+            Dictionary<int, (int distance, int row, int column)> finishDic = new Dictionary<int, (int distance, int row, int column)>();
+            finishDic.Add(grid[finish[0]][finish[1]], (0, finish[0], finish[1]));
+            for (var radius = 1; radius <= 10; radius++)
+            {
+                Surroundings(grid, start[0], start[1], radius, startDic);
+                Surroundings(grid, finish[0], finish[1], radius, finishDic);
+                var routes = startDic
+                    .Where(t => finishDic.ContainsKey(t.Key))
+                    .Select(t => (start: t.Value, finish: finishDic[t.Key]))
+                    .Select(t => t.start.distance + t.finish.distance +
+                        (t.start.row == t.finish.row && t.start.column == t.finish.column ? 0 : 1))
+                    .ToArray();
+                if (routes.Length > 0) return routes.Min();
+            }
+            return int.MaxValue;
+        }
+        readonly (int rowOffset, int columnOffset)[] adjacents = new (int rowOffset, int columnOffset)[]
+        {
+            (1, 0), (-1, 0), (0, 1), (0, -1)
+        };
+        private void Surroundings(int [][] grid, int rowStart, int columnStart, int radius,
+            Dictionary<int, (int distance, int row, int column)> values)
+        {
+            var height = grid.Length;
+            var width = grid[0].Length;
+            void Update(int rowOffset, int columnOffset)
+            {
+                var row = rowStart + rowOffset;
+                var column = columnStart + columnOffset;
+                if (row >= 0 && column >= 0 && row < height && column < width)
+                {
+                    var value = grid[row][column];
+                    if (!values.TryGetValue(value, out var info))
+                        values.Add(value, (distance: radius, row, column));
+                }
+            }
+            // The number is the radius value (it is also the distance
+            //     2
+            //     1
+            // 2 1 - 1 2
+            //     1
+            //     2
+            foreach(var adjacent in adjacents)
+                Update(adjacent.rowOffset * radius, adjacent.columnOffset * radius);
+            // 4 3 -   4
+            //   2 - 2 3
+            // - - - - -
+            // 3 2 - 2
+            // 4   - 3 4
+            for(var r = 1; r < radius; r++)
+            {
+                var ra = radius - r;
+                foreach (var adjacent in adjacents)
+                    Update(adjacent.rowOffset * ra + adjacent.columnOffset * r,
+                            adjacent.columnOffset * ra - adjacent.rowOffset * r);
+            }
+            // - - - 3 -
+            // 3 - - - -
+            // - - - - -
+            // - - - - 3
+            // - 3 - - -
+            for (var r = 1; r < radius - 1; r++)
+            {
+                var ra = radius - r;
+                foreach (var adjacent in adjacents)
+                    Update(adjacent.rowOffset * ra - adjacent.columnOffset * r,
+                            adjacent.columnOffset * ra + adjacent.rowOffset * r);
+            }
         }
     }
 }

@@ -87,6 +87,9 @@ namespace CodeSignalScraper
             var index = task.Description.IndexOf("[C#] Syntax Tips");
             if (index > 0) task.Description = task.Description.Substring(0, index);
 
+            if (Source.TestExists(task, out var _)) return;  // No need to read tests.
+
+
             task.Tests = new List<string>();
             var list = await page.QuerySelectorAllAsync("div.accordion");
             Console.Write(".");

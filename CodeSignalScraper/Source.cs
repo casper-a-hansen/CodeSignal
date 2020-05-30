@@ -276,15 +276,8 @@ namespace <area>
             File.WriteAllText(sourcePath, content);
 
             // Writing test file.
-            var testPath = Path.Combine(SourcePath, ReplaceText(TestFileName, task));
-            string source = null;
-            if (File.Exists(testPath))
-            {
-                source = File.ReadAllText(testPath);
-
-                if (source.Contains(Fix(task.Task, true))) return;
-            }
-            else
+            if (TestExists(task, out string source)) return;
+            if (source == null)
             {
                 // Create new file.
                 source = ReplaceText(TestContent, task);
@@ -295,7 +288,17 @@ namespace <area>
             if (index == -1) return;
 
             source = source.Substring(0, index) + function + source.Substring(index);
+            var testPath = Path.Combine(SourcePath, ReplaceText(TestFileName, task));
             File.WriteAllText(testPath, source);
+        }
+        public static bool TestExists(TaskInfo task, out string source)
+        {
+            source = null;
+            var testPath = Path.Combine(SourcePath, ReplaceText(TestFileName, task));
+            if (!File.Exists(testPath)) return false;
+            source = File.ReadAllText(testPath);
+
+            return source.Contains(Fix(task.Task, true));
         }
     }
 }
