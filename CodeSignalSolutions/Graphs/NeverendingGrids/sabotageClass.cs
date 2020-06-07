@@ -1,6 +1,6 @@
 /*
-    Status:   Unsolved
-    Imported: 2020-05-30 10:00
+    Status:   Solved
+    Imported: 2020-05-30 16:08
     By:       Casper
     Url:      https://app.codesignal.com/arcade/graphs-arcade/neverending-grids/HPiABBdPjKW8JvLAy
 
@@ -55,6 +55,65 @@ namespace CodeSignalSolutions.Graphs.NeverendingGrids
     class sabotageClass
     {
         int sabotage(char[][] hangar) {
+            int result = 0;
+            for(var y = 0; y < hangar.Length; y++)
+            {
+                for(var x = 0; x < hangar[0].Length; x++)
+                {
+                    if (CannotLeave(hangar, x, y)) result++;
+                }
+            }
+            return result;
+        }
+        bool CannotLeave(char[][] hangar, int x, int y)
+        {
+            // L, R, U, D gives directions in untested rooms
+            // t = currently testing this room
+            // i = infinite loop (cannot leave room)
+            // o = Going out.
+            var tested = new List<(int x, int y)>();
+            while(true)
+            {
+                var command = hangar[y][x];
+                switch(command)
+                {
+                    case 'L':
+                        hangar[y][x] = 't';
+                        tested.Add((x, y));
+                        x--;
+                        break;
+                    case 'R':
+                        hangar[y][x] = 't';
+                        tested.Add((x, y));
+                        x++;
+                        break;
+                    case 'U':
+                        hangar[y][x] = 't';
+                        tested.Add((x, y));
+                        y--;
+                        break;
+                    case 'D':
+                        hangar[y][x] = 't';
+                        tested.Add((x, y));
+                        y++;
+                        break;
+                    case 'o':
+                        foreach (var p in tested)
+                            hangar[p.y][p.x] = 'o';
+                        return false;
+                    case 't':
+                    case 'i':
+                        foreach (var p in tested)
+                            hangar[p.y][p.x] = 'i';
+                        return true;
+                }
+                if (y < 0 || y >= hangar.Length || x < 0 || x >= hangar[0].Length)
+                {
+                    foreach (var p in tested)
+                        hangar[p.y][p.x] = 'o';
+                    return false;
+                }
+            }
         }
     }
 }
