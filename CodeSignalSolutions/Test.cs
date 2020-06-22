@@ -170,9 +170,9 @@ namespace CodeSignalSolutions
         }
         static string Transform(string json)
         {
-            json = Regex.Replace(json, @"(?<=""[^""]*""|\w+)\s*,\s*(?=""[^""]*""|\w+)", ",");
-            json = Regex.Replace(json, @"(?<=\[|\w+)\s*(?=""[^""]*""|\w+)", "");
-            json = Regex.Replace(json, @"(?<=""[^""]*""|\w+)\s*(?=\])", "");
+            json = Regex.Replace(json, @"(?<=""[^""]*""|-?\w+)\s*,\s*(?=""[^""]*""|-?\w+)", ",");
+            json = Regex.Replace(json, @"(?<=\[|-?\w+)\s*(?=""[^""]*""|-?\w+)", "");
+            json = Regex.Replace(json, @"(?<=""[^""]*""|-?\w+)\s*(?=\])", "");
             json = Regex.Replace(json, @"(?<=\])\s*,\s*(?=\[)", "," + Environment.NewLine);
             json = Regex.Replace(json, @"(?<=\[)\s+(?=\[)", "");
             return Regex.Replace(json, @"(?<=\])\s+(?=\])", "");

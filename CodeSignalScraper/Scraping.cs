@@ -174,9 +174,9 @@ namespace CodeSignalScraper
             var json = value.ToString();
             if (value.ValueKind == JsonValueKind.Array)
             {
-                json = Regex.Replace(json, @"(?<=""[^""]*""|\w+)\s*,\s*(?=""[^""]*""|\w+)", ",");
-                json = Regex.Replace(json, @"(?<=\[|\w+)\s*(?=""[^""]*""|\w+)", "");
-                json = Regex.Replace(json, @"(?<=""[^""]*""|\w+)\s*(?=\])", "");
+                json = Regex.Replace(json, @"(?<=""[^""]*""|-?\w+)\s*,\s*(?=""[^""]*""|-?\w+)", ",");
+                json = Regex.Replace(json, @"(?<=\[|-?\w+)\s*(?=""[^""]*""|-?\w+)", "");
+                json = Regex.Replace(json, @"(?<=""[^""]*""|-?\w+)\s*(?=\])", "");
                 json = Regex.Replace(json, @"(?<=\])\s*,\s*(?=\[)", "," + Environment.NewLine);
                 json = Regex.Replace(json, @"(?<=\[)\s+(?=\[)", "");
                 json = Regex.Replace(json, @"(?<=\])\s+(?=\])", "");

@@ -1,6 +1,6 @@
 /*
-    Status:   Unsolved
-    Imported: 2020-06-07 11:38
+    Status:   Solved
+    Imported: 2020-06-09 20:39
     By:       Casper
     Url:      https://app.codesignal.com/arcade/graphs-arcade/orienteering/TYt5rotw5phqWRuTF
 
@@ -59,9 +59,28 @@ namespace CodeSignalSolutions.Graphs.Orienteering
 {
     class orienteeringBeginnerClass
     {
-        int orienteeringBeginner(int n, int[][][] roads) 
+        int orienteeringBeginner(int n, int[][][] roads)
         {
-            return 0;
+            var result = int.MaxValue;
+            var stack = new Stack<(int city, int length)>();
+            stack.Push((0, 0));
+            while(stack.Count != 0)
+            {
+                var pos = stack.Pop();
+                foreach (var dest in roads[pos.city])
+                {
+                    var length = pos.length + dest[1];
+                    if (result <= length) continue;
+                    if (dest[0] == n - 1)
+                    {
+                        if (length < result)
+                            result = length;
+                        continue;
+                    }
+                    stack.Push((dest[0], length));
+                }
+            }
+            return result;
         }
     }
 }
