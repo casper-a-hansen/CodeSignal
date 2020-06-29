@@ -1,6 +1,6 @@
 /*
-    Status:   Unsolved
-    Imported: 2020-06-22 23:19
+    Status:   Solved
+    Imported: 2020-06-29 23:37
     By:       Casper
     Url:      https://app.codesignal.com/arcade/graphs-arcade/orienteering/zTPmRGxZ4EXXp6Rzk
 
@@ -68,7 +68,33 @@ namespace CodeSignalSolutions.Graphs.Orienteering
 {
     class possibleLocationsClass
     {
-        int[][] possibleLocations(int n, int[][][] roads) {
+        int[][] possibleLocations(int n, int[][][] roads)
+        {
+            // The answer to this problem: https://en.wikipedia.org/wiki/Floyd%E2%80%93Warshall_algorithm
+            var distance = new int?[n, n];
+            for (var i = 0; i < n; i++)
+                foreach (var t in roads[i])
+                    distance[i,t[0]] = t[1];
+            for(var k = 0; k < n; k++)
+                for (var i = 0; i < n; i++)
+                    for (var j = 0; j < n; j++)
+                    {
+                        var d = distance[i, k] + distance[k, j];
+                        if (d < (distance[i, j] ?? int.MaxValue))
+                            distance[i, j] = d;
+                    }
+            var result = new List<int[]>();
+            for (var i = 0; i < n; i++)
+                for (var j = 0; j < n; j++)
+                    if (i != j && distance[i, j] != null)
+                    {
+                        var foundNegCycle = false;
+                        for (var k = 0; !foundNegCycle && k < n; k++)
+                            foundNegCycle = distance[i, k] != null && distance[k, j] != null && distance[k, k] < 0;
+                        if (foundNegCycle) continue;
+                        result.Add(new[] { i, j });
+                    }
+            return result.ToArray();
         }
     }
 }
